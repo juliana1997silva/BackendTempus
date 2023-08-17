@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Groups;
+use App\Models\Queries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\Tempus;
@@ -12,7 +12,7 @@ class GroupsController extends Controller
    //listar grupo
     public function index()
     {
-        $groups = Groups::all();
+        $groups = Queries::all();
          return response()->json($groups, 200);
     }
 
@@ -29,7 +29,7 @@ class GroupsController extends Controller
                 return response()->json($validator->errors());       
             }
 
-            $groups = Groups::create([
+            $groups = Queries::create([
                 'id' => Tempus::uuid(),
                 'name' => $request->name,
                 'level' => $request->level,
@@ -51,7 +51,7 @@ class GroupsController extends Controller
     {
         try {
 
-            Groups::findOrFail($id)->update($request->all());
+            Queries::findOrFail($id)->update($request->all());
 
             return response()->json(['message' => 'Atualizado com sucesso'], 200);
 
@@ -67,7 +67,7 @@ class GroupsController extends Controller
     {
         try {
 
-            $group =  Groups::findOrFail($id);
+            $group =  Queries::findOrFail($id);
             if ($group->status > 0) {
                 $group->update(['status' => 0]);
             } else {

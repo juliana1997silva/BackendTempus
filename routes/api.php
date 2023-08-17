@@ -28,11 +28,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/users', [UsersController::class, 'index']);
 Route::post('/users', [UsersController::class, 'register']);
 Route::put('/users/{id}', [UsersController::class, 'update']);
-Route::put('/users/{id}', [UsersController::class, 'release']);
+Route::put('/users/release/{id}', [UsersController::class, 'release']);
 
+//grupos
 Route::get('/group', [GroupsController::class, 'index']);
 Route::post('/group', [GroupsController::class, 'create']);
 Route::put('/group/{id}', [GroupsController::class, 'update']);
+Route::put('/group/release/{id}', [GroupsController::class, 'release']);
 
 
 
