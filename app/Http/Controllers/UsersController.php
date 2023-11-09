@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\Tempus;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UsersRequest;
 
 class UsersController extends Controller
 {
@@ -22,30 +23,34 @@ class UsersController extends Controller
     }
 
     //criar usuarios
-    public function register(Request $request)
+    public function register(UsersRequest $request)
     {
-        $validator = Validator::make($request->all(), [
+       // $request->validated();
+       // dd();
+         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'group_id' => 'required',
+            'email' => 'required|string|email|max:255 | unique:users',
+            'coordinator_id' => 'required',
             'entry_time' => 'required|string|max:255',
             'lunch_entry_time' => 'required|string|max:255',
             'lunch_out_time' => 'required|string|max:255',
             'out_time' => 'required|string|max:255',
             'password' => 'required|string|min:8'
+        ], [
+            'email.unique' => "E-mail já cadastrado !"
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors());
-        }
+        } 
 
         $user = Users::create([
             'id' => Tempus::uuid(),
             'name' => $request->name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'group_id' => $request->group_id,
+            'coordinator_id' => $request->coordinator_id,
             'entry_time' => $request->entry_time,
             'lunch_entry_time' => $request->lunch_entry_time,
             'lunch_out_time' => $request->lunch_out_time,
@@ -63,9 +68,10 @@ class UsersController extends Controller
     {
         try {
 
-            Users::findOrFail($id)->update($request->all());
+           Users::findOrFail($id)->update($request->all());
+           $user = Users::findOrFail($id);
 
-            return response()->json(['message' => 'Atualizado com sucesso'], 200);
+            return response()->json(['data' => $user], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => "Ocorreu um erro. Tente Novamente !"
@@ -78,14 +84,14 @@ class UsersController extends Controller
     {
         try {
 
-               $users =  Users::findOrFail($id);
-          if($users->status > 0){
-            $users->update(['status' => 0]);
-          } else {
-            $users->update(['status' => 1]);
-          }
+            $users =  Users::findOrFail($id);
+            if ($users->status > 0) {
+                $users->update(['status' => 0]);
+            } else {
+                $users->update(['status' => 1]);
+            }
 
-            return response()->json(['message' => 'Status atualizado com sucesso'], 200); 
+            return response()->json(['message' => 'Status atualizado com sucesso'], 200);
             //return response()->json(['message' => 'OK OK OK', 'data' => $id], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -93,7 +99,4 @@ class UsersController extends Controller
             ], 500);
         }
     }
-
-
-    
 }

@@ -4,31 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateBusinessHourTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('business_hour', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone');
+            $table->string('date');
+            $table->string('location');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('entry_time');
             $table->string('lunch_entry_time');
             $table->string('lunch_out_time');
             $table->string('out_time');
-            $table->string('password');
-            $table->string('coordinator_id');
-            $table->foreign('coordinator_id')->references('id')->on('coordinators');
-            $table->integer('status');
-            $table->rememberToken();
+            $table->char('observation', 255);
             $table->timestamps();
         });
     }
@@ -40,6 +35,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('business_hour');
     }
 }

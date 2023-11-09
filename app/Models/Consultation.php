@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Groups extends Model
+class Consultation extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,8 @@ class Groups extends Model
     
     protected $fillable = [
             'id' ,
-            'name',
-           
-            'status'
+            'registry_id',
+            'queries',
+            'description'
     ];
 }

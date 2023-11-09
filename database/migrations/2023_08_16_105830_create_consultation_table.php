@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQueriesTable extends Migration
+class CreateConsultationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateQueriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('queries', function (Blueprint $table) {
+        Schema::create('consultation', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('date');
-            $table->string('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('consultation');
+            $table->string('registry_id');
+            $table->foreign('registry_id')->references('id')->on('business_hour');
+            $table->string('queries');
             $table->char('description', 255);
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ class CreateQueriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('consultation');
     }
 }

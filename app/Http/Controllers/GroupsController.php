@@ -13,7 +13,7 @@ class GroupsController extends Controller
     public function index()
     {
         $groups = Groups::all();
-         return response()->json($groups, 200);
+         return response()->json(['data' => $groups],200);
     }
 
     //criar grupo
@@ -22,7 +22,7 @@ class GroupsController extends Controller
         try {
             $validator = Validator::make($request->all(),[
                 'name' => 'required|string',
-                'level' => 'required'
+               
             ]);
 
             if($validator->fails()){
@@ -32,7 +32,7 @@ class GroupsController extends Controller
             $groups = Groups::create([
                 'id' => Tempus::uuid(),
                 'name' => $request->name,
-                'level' => $request->level,
+                
                 'status' => 1
             ]);
 
@@ -52,8 +52,9 @@ class GroupsController extends Controller
         try {
 
             Groups::findOrFail($id)->update($request->all());
+            $group = Groups::findOrFail($id);
 
-            return response()->json(['message' => 'Atualizado com sucesso'], 200);
+            return response()->json(['data' => $group], 200);
 
         }catch (\Exception $e) {
             return response()->json([
@@ -74,7 +75,10 @@ class GroupsController extends Controller
                 $group->update(['status' => 1]);
             }
 
-            return response()->json(['message' => 'Status atualizado com sucesso'], 200);
+            $groupStatus =
+            Groups::findOrFail($id);
+
+            return response()->json(['data' => $groupStatus], 200);
 
         }catch (\Exception $e) {
             return response()->json([
