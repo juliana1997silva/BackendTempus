@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBusinessHourTable extends Migration
+class CreateNonBusinessHoursTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class CreateBusinessHourTable extends Migration
      */
     public function up()
     {
-        Schema::create('business_hour', function (Blueprint $table) {
+        Schema::create('non_business_hours', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('date');
-            $table->string('location');
-            $table->string('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('registry_id');
+            $table->foreign('registry_id')->references('id')->on('business_hours');
             $table->string('entry_time');
-            $table->string('lunch_entry_time');
-            $table->string('lunch_out_time');
+            $table->string('lunch_entry_time')->nullable()->default(NULL);
+            $table->string('lunch_out_time')->nullable()->default(NULL);
             $table->string('out_time');
-            $table->char('observation', 255);
             $table->timestamps();
         });
     }
@@ -35,6 +32,6 @@ class CreateBusinessHourTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('business_hour');
+        Schema::dropIfExists('non_business_hours');
     }
 }

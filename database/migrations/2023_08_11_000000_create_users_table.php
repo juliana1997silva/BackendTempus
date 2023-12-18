@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('coordinator_id');
             $table->foreign('coordinator_id')->references('id')->on('coordinators');
             $table->integer('status');
+            $table->integer('admin')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

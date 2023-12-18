@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Groups;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Helpers\Tempus;
+use App\Http\Requests\GroupsRequest;
+use Illuminate\Http\Request;
 
 class GroupsController extends Controller
 {
@@ -17,22 +17,14 @@ class GroupsController extends Controller
     }
 
     //criar grupo
-    public function create(Request $request)
+    public function create(GroupsRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(),[
-                'name' => 'required|string',
-               
-            ]);
-
-            if($validator->fails()){
-                return response()->json($validator->errors());       
-            }
+            $result = (object)$request->handle();
 
             $groups = Groups::create([
                 'id' => Tempus::uuid(),
-                'name' => $request->name,
-                
+                'name' => $result->name,
                 'status' => 1
             ]);
 
@@ -47,10 +39,10 @@ class GroupsController extends Controller
     }
    
     //atualizar grupo
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
         try {
-
+           // $result = (object)$request->handle();
             Groups::findOrFail($id)->update($request->all());
             $group = Groups::findOrFail($id);
 
@@ -58,7 +50,7 @@ class GroupsController extends Controller
 
         }catch (\Exception $e) {
             return response()->json([
-                'message' => "Ocorreu um erro. Tente Novamente !"
+                'message' => "Ocorreu um erro. Tente Novamente !",
             ], 500);
         }
     }

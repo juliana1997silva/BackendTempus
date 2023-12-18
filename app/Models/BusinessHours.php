@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Consultation extends Model
+class BusinessHours extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,13 @@ class Consultation extends Model
     
     protected $fillable = [
             'id' ,
-            'registry_id',
-            'queries',
-            'description'
+            'date',
+        'location',
+            'user_id',
+            'entry_time',
+            'lunch_entry_time',
+            'lunch_out_time',
+            'out_time',
+            'observation'
     ];
 }

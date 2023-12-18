@@ -3,60 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Users;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\Tempus;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UsersRequest;
+use App\Repositories\UsersRepository;
 
 class UsersController extends Controller
 {
+    protected $repository;
+
+    public function __construct(UsersRepository $repository){
+        $this->repository = $repository;
+    }
+    
     //listar usuarios
     public function index()
     {
-        $user = Users::all();
-
-        return response()
-            ->json(['data' => $user]);
+        return response()->json(['data' => Users::all()]);
     }
 
     //criar usuarios
-    public function register(UsersRequest $request)
+    public function store(UsersRequest $request)
     {
-       // $request->validated();
-       // dd();
-         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255 | unique:users',
-            'coordinator_id' => 'required',
-            'entry_time' => 'required|string|max:255',
-            'lunch_entry_time' => 'required|string|max:255',
-            'lunch_out_time' => 'required|string|max:255',
-            'out_time' => 'required|string|max:255',
-            'password' => 'required|string|min:8'
-        ], [
-            'email.unique' => "E-mail já cadastrado !"
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        } 
+        $result = (object)$request->handle();
+        //dd($result);
 
         $user = Users::create([
-            'id' => Tempus::uuid(),
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'coordinator_id' => $request->coordinator_id,
-            'entry_time' => $request->entry_time,
-            'lunch_entry_time' => $request->lunch_entry_time,
-            'lunch_out_time' => $request->lunch_out_time,
-            'out_time' => $request->out_time,
-            'password' => Hash::make($request->password),
-            'status' => 1
+            'id'                => Tempus::uuid(),
+            'name'              => $result->name,
+            'phone'             => $result->phone,
+            'email'             => $result->email,
+            'coordinator_id'    => $result->coordinator_id,
+            'entry_time'        => $result->entry_time,
+            'lunch_entry_time'  => $result->lunch_entry_time,
+            'lunch_out_time'    => $result->lunch_out_time,
+            'out_time'          => $result->out_time,
+            'password'          => Hash::make($result->password),
+            'status'            => $result->status,
+            'admin'             => $result->admin,
         ]);
 
         return response()
@@ -64,11 +49,12 @@ class UsersController extends Controller
     }
 
     //atualizar usuarios
-    public function update(Request $request, $id)
+    public function update(UsersRequest $request, $id)
     {
         try {
 
-           Users::findOrFail($id)->update($request->all());
+            $result = (object)$request->handle();
+           $this->repository->update($result->all(), $id);
            $user = Users::findOrFail($id);
 
             return response()->json(['data' => $user], 200);
@@ -84,8 +70,8 @@ class UsersController extends Controller
     {
         try {
 
-            $users =  Users::findOrFail($id);
-            if ($users->status > 0) {
+            $users =  $this->repository->find($id, ['status']);
+            if ($users > 0) {
                 $users->update(['status' => 0]);
             } else {
                 $users->update(['status' => 1]);

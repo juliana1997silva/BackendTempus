@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BusinessHour extends Model
+class NonBusinessHours extends Model
 {
     use HasFactory;
 
@@ -14,9 +14,7 @@ class BusinessHour extends Model
     
     protected $fillable = [
             'id' ,
-            'date',
-        'location',
-            'user_id',
+            'registry_id',
             'entry_time',
             'lunch_entry_time',
             'lunch_out_time',

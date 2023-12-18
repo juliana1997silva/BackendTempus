@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Helpers\Tempus;
+use App\Http\Requests\CoordinatorRequest;
 use App\Models\Coordinators;
 
 class CoordinatorsController extends Controller
@@ -17,22 +16,15 @@ class CoordinatorsController extends Controller
     }
 
     //criar coordenadores
-    public function create(Request $request)
+    public function create(CoordinatorRequest $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string',
-                'group_id' => 'required|string',
-            ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors());
-            }
-
+            $result = (object)$request->handle();
             $Coordinator = Coordinators::create([
                 'id' => Tempus::uuid(),
-                'name' => $request->name,
-                'group_id' => $request->group_id,
+                'name' => $result->name,
+                'group_id' => $result->group_id,
                 'status' => 1
             ]);
 
@@ -45,11 +37,12 @@ class CoordinatorsController extends Controller
     }
 
     //atualizar coordenadores
-    public function update(Request $request, $id)
+    public function update(CoordinatorRequest $request, $id)
     {
         try {
+            $result = (object)$request->handle();
 
-            Coordinators::findOrFail($id)->update($request->all());
+            Coordinators::findOrFail($id)->update($result->all());
             $update = Coordinators::findOrFail($id);
 
             return response()->json(['data' => $update], 200);
@@ -73,7 +66,7 @@ class CoordinatorsController extends Controller
             }
 
             $update =
-            Coordinators::findOrFail($id);
+                Coordinators::findOrFail($id);
 
             return response()->json(['data' => $update], 200);
         } catch (\Exception $e) {
