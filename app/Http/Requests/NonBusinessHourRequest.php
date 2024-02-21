@@ -31,6 +31,7 @@ class NonBusinessHourRequest extends FormRequest
             'lunch_entry_time'                   => 'string',
             'lunch_out_time'                     => 'string',
             'out_time'                           => 'required|string',
+          
         ];
     }
 
@@ -54,6 +55,7 @@ class NonBusinessHourRequest extends FormRequest
             'lunch_entry_time'      => $this->lunch_entry_time,
             'lunch_out_time'        => $this->lunch_out_time,
             'out_time'              => $this->out_time,
+           
         ];
     }
 }

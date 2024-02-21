@@ -28,7 +28,8 @@ class GroupsRequest extends FormRequest
     {
         return [
             //
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'manager' => 'required|string'
         ];
     }
 
@@ -42,6 +43,7 @@ class GroupsRequest extends FormRequest
         return [
             
             'name.required' => "Nome Obrigatorio",
+            'manager.required' => "Gestor do Grupo Obrigatorio",
             
         ];
     }
@@ -49,7 +51,8 @@ class GroupsRequest extends FormRequest
     public function handle()
     {
         return [
-            'name' => $this->name
+            'name' => $this->name,
+            'manager' => $this->manager
         ];
     }
 }

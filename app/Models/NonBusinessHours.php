@@ -19,6 +19,7 @@ class NonBusinessHours extends Model
             'lunch_entry_time',
             'lunch_out_time',
             'out_time',
+            'total_time',
             'observation'
     ];
 }

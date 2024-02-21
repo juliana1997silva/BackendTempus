@@ -23,7 +23,9 @@ class CreateBusinessHoursTable extends Migration
             $table->string('lunch_entry_time');
             $table->string('lunch_out_time');
             $table->string('out_time');
-            $table->char('observation', 255);
+            $table->string('total_time');
+            $table->char('observation', 255)->nullable();
+            $table->string('status')->default("pending");
             $table->timestamps();
         });
     }

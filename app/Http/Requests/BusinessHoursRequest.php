@@ -26,26 +26,68 @@ class BusinessHoursRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'date'                               => 'required|string|unique:business_hours,date',
-            'location'                           => 'required|string',
-            'user_id'                            => 'required|string',
-            'entry_time'                         => 'required|string',
-            'lunch_entry_time'                   => 'required|string',
-            'lunch_out_time'                     => 'required|string',
-            'out_time'                           => 'required|string',
-            'observation'                        => 'string',
-            'nonbusiness'                       => array([
+        $rules =
+            [
+                'date'                               => 'required|string',
+                'location'                           => 'required|string',
+                'user_id'                            => 'required|string',
                 'entry_time'                         => 'required|string',
+                'lunch_entry_time'                   => 'required|string',
+                'lunch_out_time'                     => 'required|string',
+                'out_time'                           => 'required|string',
+                'status'                             => 'string',
+                'nonbusiness'                        => array([
+                    'id'                                 => 'string',
+                    'registry_id'                        => 'string',
+                    'entry_time'                         => 'required|string',
+                    'lunch_entry_time'                   => 'string',
+                    'lunch_out_time'                     => 'string',
+                    'out_time'                           => 'required|string',
+                ]),
+                'consults'                           => array([
+                    'id'            => 'string',
+                    'registry_id'   => 'string',
+                    'queries'       => 'required|string',
+                    'description'   => 'required|string'
+                ])
+            ];
+
+        if ($this->method() === "PUT") {
+            $rules['date'] = [
+                'required',
+                'string',
+                "unique:business_hours,date,{$this->id},id"
+            ];
+        }
+
+        if ($this->method() === "PATCH") {
+            $rules = [
+                'date'                               => 'string',
+                'location'                           => 'string',
+                'user_id'                            => 'string',
+                'entry_time'                         => 'string',
                 'lunch_entry_time'                   => 'string',
                 'lunch_out_time'                     => 'string',
-                'out_time'                           => 'required|string',
-            ]),
-            'consults'                           => array([
-                'queries'       => 'required|string',
-                'description'   => 'required|string'
-            ])
-        ];
+                'out_time'                           => 'string',
+                'status'                             => 'required|string',
+                'nonbusiness'                        => array([
+                    'id'                                 => 'string',
+                    'registry_id'                        => 'string',
+                    'entry_time'                         => 'string',
+                    'lunch_entry_time'                   => 'string',
+                    'lunch_out_time'                     => 'string',
+                    'out_time'                           => 'string',
+                ]),
+                'consults'                           => array([
+                    'id'            => 'string',
+                    'registry_id'   => 'string',
+                    'queries'       => 'string',
+                    'description'   => 'string'
+                ])
+            ];
+        }
+
+        return  $rules;
     }
 
     /**
@@ -57,14 +99,13 @@ class BusinessHoursRequest extends FormRequest
     {
         return [
             'date.required'                 => "Data Obrigatorio",
-            'date.unique'                   => "Data já registrada",
             'location.required'             => "Local Obrigatorio",
             'user_id.required'              => "Id Usuario Obrigatorio",
             'entry_time.required'           => "Horario de Entrada Obrigatorio",
             'lunch_entry_time.required'     => "Inicio do Almoço/Janta Obrigatorio",
             'lunch_out_time.required'       => "Termino do Almoço/Janta Obrigatorio",
             'out_time.required'             => "Horario da Saída Obrigatorio"
-            
+
         ];
     }
 
@@ -78,9 +119,10 @@ class BusinessHoursRequest extends FormRequest
             'lunch_entry_time'      => $this->lunch_entry_time,
             'lunch_out_time'        => $this->lunch_out_time,
             'out_time'              => $this->out_time,
-            'observation'           => $this->observation,
             'nonbusiness'           => $this->nonbusiness,
-            'consults'              => $this->consults
+            'consults'              => $this->consults,
+            'status'                => $this->status,
+           
         ];
     }
 }

@@ -26,12 +26,12 @@ class UsersRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules =  [
             //
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|string|email|max:255 | unique:users',
-            'coordinator_id' => 'required',
+            'group_id' => 'string',
             'entry_time' => 'required|string|max:255',
             'lunch_entry_time' => 'required|string|max:255',
             'lunch_out_time' => 'required|string|max:255',
@@ -39,6 +39,23 @@ class UsersRequest extends FormRequest
             'password' => 'required|string|min:8',
             'admin' => 'integer'
         ];
+
+        if ($this->method() === "PUT") {
+            $rules = [
+                'name' => 'string|max:255',
+                'phone' => 'string|max:255',
+                'email' => 'string|email|max:255',
+                'group_id' => 'string',
+                'entry_time' => 'string|max:255',
+                'lunch_entry_time' => 'string|max:255',
+                'lunch_out_time' => 'string|max:255',
+                'out_time' => 'string|max:255',
+                'password' => 'string|min:8',
+                'admin' => 'integer'
+            ];
+        }
+
+        return  $rules;
     }
 
     /**
@@ -68,7 +85,7 @@ class UsersRequest extends FormRequest
             'name' => $this->name,
             'phone' => $this->phone,
             'email' => $this->email,
-            'coordinator_id' => $this->coordinator_id,
+            'group_id' => $this->group_id,
             'entry_time' => $this->entry_time,
             'lunch_entry_time' => $this->lunch_entry_time,
             'lunch_out_time' => $this->lunch_out_time,

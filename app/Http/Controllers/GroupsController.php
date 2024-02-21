@@ -6,14 +6,16 @@ use App\Models\Groups;
 use App\Helpers\Tempus;
 use App\Http\Requests\GroupsRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupsController extends Controller
 {
    //listar grupo
     public function index()
     {
-        $groups = Groups::all();
-         return response()->json(['data' => $groups],200);
+        $user = Auth::user();
+        $groups = Groups::find($user->group_id);
+         return response()->json([$groups],200);
     }
 
     //criar grupo
@@ -25,6 +27,7 @@ class GroupsController extends Controller
             $groups = Groups::create([
                 'id' => Tempus::uuid(),
                 'name' => $result->name,
+                'manager' => $result->manager,
                 'status' => 1
             ]);
 
@@ -39,20 +42,17 @@ class GroupsController extends Controller
     }
    
     //atualizar grupo
-    public function update($id, Request $request)
+    public function update($id, GroupsRequest $request)
     {
-        try {
-           // $result = (object)$request->handle();
-            Groups::findOrFail($id)->update($request->all());
-            $group = Groups::findOrFail($id);
+        $result = (object)$request->handle();
+        $groups = Groups::find($id);
 
-            return response()->json(['data' => $group], 200);
+        $groups->update([
+            'name' => $result->name,
+            'manager' => $result->manager
+        ]);
 
-        }catch (\Exception $e) {
-            return response()->json([
-                'message' => "Ocorreu um erro. Tente Novamente !",
-            ], 500);
-        }
+        return response()->json("Atualizado com sucesso", 200);
     }
 
     //atualizar status do grupo

@@ -15,12 +15,14 @@ class BusinessHours extends Model
     protected $fillable = [
             'id' ,
             'date',
-        'location',
+            'location',
             'user_id',
             'entry_time',
             'lunch_entry_time',
             'lunch_out_time',
             'out_time',
-            'observation'
+        'total_time',
+            'observation',
+            'status'
     ];
 }

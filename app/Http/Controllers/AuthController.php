@@ -3,40 +3,61 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\AuthRequest;
+use App\Models\Groups;
 use App\Models\Users;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     //realizar login
-
-    public function login(Request $request)
+    public function signin(AuthRequest $request)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
 
-            if ($validator->fails()) {
-                return response()->json(['message' => $validator->errors()], 401);
-            }
+        $result = (object)$request->handle();
 
-            if (Auth::attempt($request->all())) {
-                $user = Auth::user();
-                if ($user instanceof \App\Models\Users) {
-                    $success = $user->createToken('auth_token')->plainTextToken;
-                    $dataUsers = Users::findOrFail(['email' => $request->email]);
+        $user = Users::where('email', $result->email)->first();
+        $group = Groups::find($user->group_id);
+
+        if ($user) {
+
+            if (!Hash::check($result->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Senha incorreta'
+                ], 401);
+            } else {
+                if($user->status === 1 && $group->status === 1 ){
+                    $token = $user->createToken('auth_token');
+
+                    $response = [
+                        'id'                => $user->id,
+                        'name'              => $user->name,
+                        'phone'             => $user->phone,
+                        'email'             => $user->email,
+                        'group_id'    => $user->group_id,
+                        'entry_time'        => $user->entry_time,
+                        'lunch_entry_time'  => $user->lunch_entry_time,
+                        'lunch_out_time'    => $user->lunch_out_time,
+                        'out_time'          => $user->out_time,
+                        'status'            => $user->status,
+                        'admin'             => $user->admin,
+                        'token'             => $token->plainTextToken
+                    ];
+
+                    return response()->json($response, 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Usuário/Grupo está desativado ! '
+                    ], 401);
                 }
-
-                return response()->json(['token' => $success, 'data' => $dataUsers], 200);
+                
             }
+        } else {
 
-            return response()->json(['message' => 'E-mail ou Senha Incorreto'], 406);
-        } catch (\Exception $e) {
-            return response()->json(["message" => "Ocorreu um erro. Tente Novamente !"], 500);
+            return response()->json([
+                'message' => 'Usuario não cadastrado'
+            ], 402);
         }
     }
 }

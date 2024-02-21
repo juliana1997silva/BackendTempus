@@ -28,8 +28,9 @@ class Users extends Authenticatable
         'lunch_out_time',
         'out_time',
         'password',
-        'coordinator_id',
-        'status'
+        'group_id',
+        'status',
+        'admin'
     ];
 
     /**
