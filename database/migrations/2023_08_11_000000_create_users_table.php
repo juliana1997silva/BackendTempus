@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->foreign('group_id')->references('id')->on('groups');
             $table->integer('status');
             $table->integer('admin')->default(0);
+            $table->integer('manager')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

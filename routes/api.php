@@ -20,6 +20,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('/pdf/{id}', [BusinessHoursController::class, 'generation']);
 
 
+    
+
     Route::middleware('auth:sanctum')->group(function () {
 
         //usuarios
@@ -27,6 +29,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::post('/users', [UsersController::class, "store"]);
         Route::put('/users/{id}', [UsersController::class, "update"]);
         Route::patch('/users/release/{id}', [UsersController::class, "release"]);
+        Route::delete('/users/{id}', [UsersController::class, 'destroy']);
 
 
         //coordenadores
@@ -40,6 +43,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::post('/group', [GroupsController::class, 'create']);
         Route::put('/group/{id}', [GroupsController::class, 'update']);
         Route::patch('/group/release/{id}', [GroupsController::class, 'release']);
+        Route::delete('/group/{id}', [GroupsController::class, 'destroy']);
 
         //registro de ponto
         Route::get('/checkpoint', [BusinessHoursController::class, 'index']);
@@ -48,8 +52,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('/checkpoint/users/{id}', [BusinessHoursController::class, 'users']);
         Route::put('/checkpoint/{id}', [BusinessHoursController::class, 'update']);
         Route::patch('/checkpoint/release/{id}', [BusinessHoursController::class, 'release']);
-
-
+        Route::delete('/checkpoint/{id}', [BusinessHoursController::class, 'destroy']);
 
         //eventos da agenda
         Route::post('/events', [EventsController::class, 'create']);

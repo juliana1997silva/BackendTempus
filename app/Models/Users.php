@@ -30,7 +30,8 @@ class Users extends Authenticatable
         'password',
         'group_id',
         'status',
-        'admin'
+        'admin',
+        'manager'
     ];
 
     /**

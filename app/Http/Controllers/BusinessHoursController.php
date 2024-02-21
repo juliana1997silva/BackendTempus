@@ -83,7 +83,7 @@ class BusinessHoursController extends Controller
     {
         $time = BusinessHours::where("user_id", $id)->get();
 
-        foreach($time as $k => $items){
+        foreach ($time as $k => $items) {
             $time[$k]['nonbusiness'] = $this->repositoryNonBusinessHours->where('registry_id', $items['id'])->get();
             $time[$k]['consults'] = $this->repositoryConsultation->where('registry_id', $items['id'])->get();
         }
@@ -388,9 +388,23 @@ class BusinessHoursController extends Controller
 
         $pdf = Pdf::loadView('pdf', compact('data'))->setPaper('a4', 'landscape');
 
-        return $pdf->download("Ficha Semanal - $user->name.pdf",[
+        return $pdf->download("Ficha Semanal - $user->name.pdf", [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="Ficha_Semanal.pdf"',
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $hours = BusinessHours::find($id);
+        if ($hours) {
+            $hours->delete();
+            $this->repositoryNonBusinessHours->where('registry_id', $id)->get()->delete();
+            $this->repositoryConsultation->where('registry_id', $id)->get()->delete();
+
+            return response()->json("Registro deletado com sucesso", 200);
+        } else {
+            return response()->json("Registro não encontrado", 401);
+        }
     }
 }

@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use App\Helpers\Tempus;
 use App\Http\Requests\EventsRequest;
 use App\Models\Events;
+use App\Models\Users;
 use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
 {
-    public function index() {
+    public function index()
+    {
 
         $user = Auth::user();
 
-        $events = Events::where('user_id', $user->id)->get();
+        if ($user->admin === 1) {
+            $events = Events::all();
+        } else if ($user->manager === 1) {
+            $users = Users::where('group_id', $user->group_id)->get();
+            foreach ($users as $value) {
+                $events = Events::where('user_id', $value['id'])->get();
+            }
+        } else {
+            $events = Events::where('user_id', $user->id)->get();
+        }
 
         return response()->json($events, 200);
     }
@@ -35,7 +46,6 @@ class EventsController extends Controller
         ]);
 
         return response()->json("Evento criado com sucesso", 200);
-        
     }
 
     public function update($id, EventsRequest $request)

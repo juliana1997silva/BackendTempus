@@ -37,7 +37,8 @@ class UsersRequest extends FormRequest
             'lunch_out_time' => 'required|string|max:255',
             'out_time' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'admin' => 'integer'
+            'admin' => 'integer',
+            'manager' => 'integer'
         ];
 
         if ($this->method() === "PUT") {
@@ -51,7 +52,8 @@ class UsersRequest extends FormRequest
                 'lunch_out_time' => 'string|max:255',
                 'out_time' => 'string|max:255',
                 'password' => 'string|min:8',
-                'admin' => 'integer'
+                'admin' => 'integer',
+                'manager' => 'integer'
             ];
         }
 
@@ -92,6 +94,7 @@ class UsersRequest extends FormRequest
             'out_time' => $this->out_time,
             'password' => $this->password,
             'admin' => isset($this->admin) ? $this->admin : 0,
+            'manager' => $this->manager,
             'status' => isset($this->status) ? $this->status : 1
         ];
     }

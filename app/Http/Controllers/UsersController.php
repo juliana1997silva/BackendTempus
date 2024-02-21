@@ -26,10 +26,16 @@ class UsersController extends Controller
 
         $user = Auth::user();
 
+        if ($user->admin === 1) {
+            $users = Users::all();
+            return response()->json($users, 200);
+        } else {
             $users = Users::where("group_id", $user->group_id)
-            ->where("admin", 0)
+            ->where('manager', 0)
             ->get();
             return response()->json($users, 200);
+            
+        } 
 
     }
 
@@ -43,7 +49,7 @@ class UsersController extends Controller
             'name'              => $result->name,
             'phone'             => $result->phone,
             'email'             => $result->email,
-            'group_id'    => $result->group_id,
+            'group_id'          => $result->group_id,
             'entry_time'        => $result->entry_time,
             'lunch_entry_time'  => $result->lunch_entry_time,
             'lunch_out_time'    => $result->lunch_out_time,
@@ -51,6 +57,7 @@ class UsersController extends Controller
             'password'          => Hash::make($result->password),
             'status'            => $result->status,
             'admin'             => $result->admin,
+            'manager'             => $result->manager,
         ]);
 
         return response()
@@ -67,13 +74,14 @@ class UsersController extends Controller
             'name'              => $result->name,
             'phone'             => $result->phone,
             'email'             => $result->email,
-            'group_id'    => $result->group_id,
+            'group_id'          => $result->group_id,
             'entry_time'        => $result->entry_time,
             'lunch_entry_time'  => $result->lunch_entry_time,
             'lunch_out_time'    => $result->lunch_out_time,
             'out_time'          => $result->out_time,
             'status'            => $result->status,
             'admin'             => $result->admin,
+            'manager'           => $result->manager,
         ]);
 
         return response()->json("Atualização realizada com sucesso", 200);
@@ -91,5 +99,16 @@ class UsersController extends Controller
         }
 
         return response()->json(['message' => 'Status atualizado com sucesso'], 200);
+    }
+
+    public function destroy($id){
+        $users = Users::find($id);
+
+        if($users){
+            $users->delete();
+            return response()->json("Usuario Deletado", 200);
+        }else {
+            return response()->json("Usuario não encontrado", 401);
+        }
     }
 }

@@ -30,19 +30,22 @@ class AuthController extends Controller
                 if($user->status === 1 && $group->status === 1 ){
                     $token = $user->createToken('auth_token');
 
+                    $nameGroup = Groups::find($user->group_id);
+
                     $response = [
                         'id'                => $user->id,
                         'name'              => $user->name,
                         'phone'             => $user->phone,
                         'email'             => $user->email,
-                        'group_id'    => $user->group_id,
+                        'group_id'          => $user->group_id,
                         'entry_time'        => $user->entry_time,
                         'lunch_entry_time'  => $user->lunch_entry_time,
                         'lunch_out_time'    => $user->lunch_out_time,
                         'out_time'          => $user->out_time,
                         'status'            => $user->status,
                         'admin'             => $user->admin,
-                        'token'             => $token->plainTextToken
+                        'token'             => $token->plainTextToken,
+                        'manager'           => $user->manager
                     ];
 
                     return response()->json($response, 200);
