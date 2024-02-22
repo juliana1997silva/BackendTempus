@@ -24,6 +24,9 @@ Route::group(['middleware' => ['cors']], function () {
 
     Route::middleware('auth:sanctum')->group(function () {
 
+        //alterar senha
+        Route::post('/forgout', [AuthController::class, 'forgoutPassword']);
+
         //usuarios
         Route::get('/users', [UsersController::class, "index"]);
         Route::post('/users', [UsersController::class, "store"]);

@@ -29,7 +29,9 @@ class AuthRequest extends FormRequest
         return [
             //
             'email' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'confirmation_password' => 'string',
+            'new_password' => 'string'
         ];
     }
 
@@ -56,8 +58,10 @@ class AuthRequest extends FormRequest
     public function handle()
     {
         return [
-            'email'           => $this->email,
-            'password'        => $this->password
+            'email'                         => $this->email,
+            'password'                      => $this->password,
+            'confirmation_password'         => $this->confirmation_password,
+            'new_password'                  => $this->new_password
         ];
     }
 }

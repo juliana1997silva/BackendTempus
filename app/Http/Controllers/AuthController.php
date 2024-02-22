@@ -63,4 +63,22 @@ class AuthController extends Controller
             ], 402);
         }
     }
+
+    public function forgoutPassword(AuthRequest $request){
+        $user = Auth::user();
+        $result = (object)$request->handle();
+
+        if(Hash::check($result->password, $user->password)){
+            if($result->new_password === $result->confirmation_password){
+                $updateUser = Users::find($user->id);
+                $updateUser->update([
+                    'password' => Hash::make($result->new_password)
+                ]);
+
+                return response()->json("Senha atualizada com sucesso .", 200);
+            }else {
+                return response()->json("As senhas não conferem .", 402);
+            }
+        }
+    }
 }
