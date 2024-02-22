@@ -916,7 +916,6 @@
 
 		</tr>
 		@endforeach
-		@else
 		@endif
 		@endforeach
 		<tr>
