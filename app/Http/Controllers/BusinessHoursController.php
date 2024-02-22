@@ -369,7 +369,7 @@ class BusinessHoursController extends Controller
 
         $user = $this->repositoryUsers->find($id);
 
-        $coordenadores = Groups::find($user->group_id);
+        $coordenadores = $this->repositoryUsers->where('group_id', $user->group_id)->where('manager', 1)->first();
 
         foreach ($dados as $k => $value) {
             $dados[$k]['business'] = $this->repositoryNonBusinessHours->where('registry_id', $value['id'])->get();
@@ -380,7 +380,7 @@ class BusinessHoursController extends Controller
 
         $data = [
             'user_name' => $user->name,
-            'coordenador_name' => $coordenadores->manager,
+            'coordenador_name' => $coordenadores->name,
             'hours' => $dados,
             'today' => date('m/Y'),
             'hoje' => date('d/m/Y')

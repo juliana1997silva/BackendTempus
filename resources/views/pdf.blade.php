@@ -916,8 +916,164 @@
 
 		</tr>
 		@endforeach
+		@else
 		@endif
 		@endforeach
+		<tr>
+			<td height="15" align="left">
+				<font size=1><br></font>
+			</td>
+			<td style="border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=13 align="left" valign=middle>
+				<font size=1></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center" valign=middle bgcolor="#B2B2B2"><b>
+					<font size=1>{{$data['user_name']}}</font>
+				</b></td>
+			<td align="center" valign=middle><b>
+					<font size=1><br></font>
+				</b></td>
+			<td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=3 align="center" valign=middle bgcolor="#B2B2B2"><b>
+					<font size=1><br></font>
+				</b></td>
+			<td align="center" valign=middle><i>
+					<font size=1><br></font>
+				</i></td>
+		</tr>
+		<tr>
+			<td height="15" align="left">
+				<font size=1><br></font>
+			</td>
+
+			<td style="border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=13 align="left" valign=middle>
+				<font size=1></font>
+			</td>
+
+			<td align="left">
+				<font size=1></font>
+			</td>
+			<td style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center" valign=middle bgcolor="#B2B2B2"><i>
+					<font size=1>Colaborador</font>
+				</i></td>
+			<td align="center" valign=middle><i>
+					<font size=1><br></font>
+				</i></td>
+			<td style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=3 align="center" valign=middle bgcolor="#B2B2B2"><i>
+					<font size=1>RH</font>
+				</i></td>
+			<td align="center" valign=middle><i>
+					<font size=1><br></font>
+				</i></td>
+		</tr>
+
+		<tr>
+			<td height="15" align="left">
+				<font size=1><br></font>
+			</td>
+
+			<td style="border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=13 align="left" valign=middle>
+				<font size=1></font>
+			</td>
+
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center" valign=middle bgcolor="#B2B2B2"><b>
+					<font size=1>{{$data['coordenador_name']}}</font>
+				</b></td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+		</tr>
+		<tr>
+			<td height="15" align="left">
+				<font size=1><br></font>
+			</td>
+
+			<td style="border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=13 align="left" valign=middle>
+				<font size=1></font>
+			</td>
+
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center" valign=middle bgcolor="#B2B2B2"><i>
+					<font size=1>Gestor</font>
+				</i></td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td>
+				<font size=1><br></font>
+			</td>
+			<td>
+				<font size=1><br></font>
+			</td>
+		</tr>
+		<tr>
+			<td height="15" align="left">
+				<font size=1><br></font>
+			</td>
+
+			<td style="border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=13 align="left" valign=middle>
+				<font size=1></font>
+			</td>
+
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td align="left">
+				<font size=1><br></font>
+			</td>
+			<td>
+				<font size=1><br></font>
+			</td>
+			<td>
+				<font size=1><br></font>
+			</td>
+		</tr>
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>
