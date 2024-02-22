@@ -81,7 +81,12 @@ class BusinessHoursController extends Controller
 
     public function users($id)
     {
-        $time = BusinessHours::where("user_id", $id)->orderBy('created_at', 'asc')->get();
+        $time = BusinessHours::where("user_id", $id)
+            ->where('status', 'approved')
+            ->where('status', 'disapproved')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'asc')
+            ->get();
 
         foreach ($time as $k => $items) {
             $time[$k]['nonbusiness'] = $this->repositoryNonBusinessHours->where('registry_id', $items['id'])->get();
@@ -203,14 +208,26 @@ class BusinessHoursController extends Controller
         try {
             $result = (object)$request->handle();
 
-
-
             $businessHours = BusinessHours::find($id);
 
             if ($businessHours) {
                 // dd("JULIANA");
+                $total = (strtotime($result->lunch_entry_time) - strtotime($result->entry_time)) +
+                    (strtotime($result->out_time) - strtotime($result->lunch_out_time));
+
+                $hours      = floor($total / 60 / 60);
+                $minutes    = round(($total - ($hours * 60 * 60)) / 60);
+
+                $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
+                $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
+
                 $businessHours->update([
-                    'location'        => $result->location
+                    'location'                          => $result->location,
+                    'entry_time'                        => $result->entry_time,
+                    'lunch_entry_time'                  => $result->lunch_entry_time,
+                    'lunch_out_time'                    => $result->lunch_out_time,
+                    'out_time'                          => $result->out_time,
+                    'total_time'                        => $hours . ':' . $minutes,
                 ]);
             } else {
                 response()->json(['message' => 'Registro não encontrado'], 422);
@@ -374,6 +391,11 @@ class BusinessHoursController extends Controller
         foreach ($dados as $k => $value) {
             $dados[$k]['business'] = $this->repositoryNonBusinessHours->where('registry_id', $value['id'])->get();
             $dados[$k]['consults'] = $this->repositoryConsultation->where('registry_id', $value['id'])->get();
+
+            $updateStatus =  BusinessHours::find($value['id']);
+            $updateStatus->update([
+                'status' => 'generation'
+            ]);
         }
 
         //dd($dados);

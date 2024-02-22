@@ -53,11 +53,20 @@ class BusinessHoursRequest extends FormRequest
             ];
 
         if ($this->method() === "PUT") {
-            $rules['date'] = [
-                'required',
+            $rulesDate['date'] = [
                 'string',
                 "unique:business_hours,date,{$this->id},id"
             ];
+
+            $rules = [
+                    'date'                               => $rulesDate['date'],
+                    'location'                           => 'string',
+                    'user_id'                            => 'string',
+                    'entry_time'                         => 'string',
+                    'lunch_entry_time'                   => 'string',
+                    'lunch_out_time'                     => 'string',
+                    'out_time'                           => 'string',
+                ];
         }
 
         if ($this->method() === "PATCH") {
