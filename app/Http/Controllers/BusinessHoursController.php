@@ -81,7 +81,7 @@ class BusinessHoursController extends Controller
 
     public function users($id)
     {
-        $time = BusinessHours::where("user_id", $id)->get();
+        $time = BusinessHours::where("user_id", $id)->orderBy('created_at', 'asc')->get();
 
         foreach ($time as $k => $items) {
             $time[$k]['nonbusiness'] = $this->repositoryNonBusinessHours->where('registry_id', $items['id'])->get();
