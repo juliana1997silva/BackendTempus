@@ -38,7 +38,8 @@ class UsersRequest extends FormRequest
             'out_time' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'admin' => 'integer',
-            'manager' => 'integer'
+            'manager' => 'integer',
+            'user_interpres_code' => 'string'
         ];
 
         if ($this->method() === "PUT") {
@@ -53,7 +54,8 @@ class UsersRequest extends FormRequest
                 'out_time' => 'string|max:255',
                 'password' => 'string|min:8',
                 'admin' => 'integer',
-                'manager' => 'integer'
+                'manager' => 'integer',
+                'user_interpres_code' => 'string'
             ];
         }
 
@@ -95,7 +97,8 @@ class UsersRequest extends FormRequest
             'password' => $this->password,
             'admin' => isset($this->admin) ? $this->admin : 0,
             'manager' => $this->manager,
-            'status' => isset($this->status) ? $this->status : 1
+            'status' => isset($this->status) ? $this->status : 1,
+            'user_interpres_code' => $this->user_interpres_code
         ];
     }
 }

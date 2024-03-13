@@ -753,7 +753,6 @@
 		@foreach($data['hours'] as $i => $items)
 
 		@if(count($items->consults) > 0)
-
 		@foreach($items->consults as $x => $v)
 		<tr>
 			@if($i == 0 && $x == 0)
@@ -916,8 +915,11 @@
 
 		</tr>
 		@endforeach
+
 		@endif
 		@endforeach
+
+		<!-- Quando não tem registro de consultas -->
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>
@@ -941,6 +943,7 @@
 					<font size=1><br></font>
 				</i></td>
 		</tr>
+
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>
@@ -966,6 +969,7 @@
 					<font size=1><br></font>
 				</i></td>
 		</tr>
+
 
 		<tr>
 			<td height="15" align="left">
@@ -1001,6 +1005,7 @@
 				<font size=1><br></font>
 			</td>
 		</tr>
+
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>
@@ -1041,6 +1046,7 @@
 				<font size=1><br></font>
 			</td>
 		</tr>
+
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>
@@ -1073,6 +1079,9 @@
 				<font size=1><br></font>
 			</td>
 		</tr>
+		<!-- Fim -->
+
+
 		<tr>
 			<td height="15" align="left">
 				<font size=1><br></font>

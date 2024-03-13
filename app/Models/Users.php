@@ -31,7 +31,8 @@ class Users extends Authenticatable
         'group_id',
         'status',
         'admin',
-        'manager'
+        'manager',
+        'user_interpres_code'
     ];
 
     /**

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessHoursController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CoordinatorsController;
@@ -56,6 +57,9 @@ Route::group(['middleware' => ['cors']], function () {
         Route::put('/checkpoint/{id}', [BusinessHoursController::class, 'update']);
         Route::patch('/checkpoint/release/{id}', [BusinessHoursController::class, 'release']);
         Route::delete('/checkpoint/{id}', [BusinessHoursController::class, 'destroy']);
+
+        //consulta
+        Route::delete('/consult/{id}', [ConsultationController::class, 'destroy']);
 
         //eventos da agenda
         Route::post('/events', [EventsController::class, 'create']);

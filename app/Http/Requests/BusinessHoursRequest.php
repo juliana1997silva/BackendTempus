@@ -66,6 +66,20 @@ class BusinessHoursRequest extends FormRequest
                     'lunch_entry_time'                   => 'string',
                     'lunch_out_time'                     => 'string',
                     'out_time'                           => 'string',
+                'nonbusiness'                        => array([
+                    'id'                                 => 'string',
+                    'registry_id'                        => 'string',
+                    'entry_time'                         => 'required|string',
+                    'lunch_entry_time'                   => 'string',
+                    'lunch_out_time'                     => 'string',
+                    'out_time'                           => 'required|string',
+                ]),
+                'consults'                           => array([
+                    'id'            => 'string',
+                    'registry_id'   => 'string',
+                    'queries'       => 'required|string',
+                    'description'   => 'required|string'
+                ])
                 ];
         }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\ConsultationRequest;
 use App\Models\Consultations;
 
@@ -23,5 +24,11 @@ class ConsultationController extends Controller
             return response()->json(["error" => $e], 500);
         }
     }
-   
+
+    public function destroy($id)
+    {
+        Consultations::find($id)->delete();
+
+        return response()->json("Deletado com sucesso.",  200);
+    }
 }

@@ -31,12 +31,10 @@ class UsersController extends Controller
             return response()->json($users, 200);
         } else {
             $users = Users::where("group_id", $user->group_id)
-            ->where('manager', 0)
-            ->get();
+                ->where('manager', 0)
+                ->get();
             return response()->json($users, 200);
-            
-        } 
-
+        }
     }
 
     //criar usuarios
@@ -58,6 +56,7 @@ class UsersController extends Controller
             'status'            => $result->status,
             'admin'             => $result->admin,
             'manager'             => $result->manager,
+            'user_interpres_code' => $result->user_interpres_code
         ]);
 
         return response()
@@ -82,6 +81,7 @@ class UsersController extends Controller
             'status'            => $result->status,
             'admin'             => $result->admin,
             'manager'           => $result->manager,
+            'user_interpres_code' => $result->user_interpres_code
         ]);
 
         return response()->json("Atualização realizada com sucesso", 200);
@@ -101,13 +101,14 @@ class UsersController extends Controller
         return response()->json(['message' => 'Status atualizado com sucesso'], 200);
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $users = Users::find($id);
 
-        if($users){
+        if ($users) {
             $users->delete();
             return response()->json("Usuario Deletado", 200);
-        }else {
+        } else {
             return response()->json("Usuario não encontrado", 401);
         }
     }

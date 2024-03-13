@@ -82,9 +82,6 @@ class BusinessHoursController extends Controller
     public function users($id)
     {
         $time = BusinessHours::where("user_id", $id)
-            ->where('status', 'approved')
-            ->where('status', 'disapproved')
-            ->where('status', 'pending')
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -190,7 +187,8 @@ class BusinessHoursController extends Controller
                         'id'                => Tempus::uuid(),
                         'registry_id'       => $time->id,
                         'queries'           => $value['queries'],
-                        'description'       => $value['description']
+                        'description'       => $value['description'],
+                        'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
                     ]);
                 }
             }
@@ -239,9 +237,8 @@ class BusinessHoursController extends Controller
 
                 foreach ($result->nonbusiness as $value) {
 
-                    $count = $this->repositoryNonBusinessHours->where('registry_id', $id)->count();
 
-                    if ($count > 0) {
+                    if ($value['id'] !== null) {
 
                         if ($value['lunch_entry_time'] !== null) {
 
@@ -254,7 +251,7 @@ class BusinessHoursController extends Controller
                             $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
                             $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
 
-                            $this->repositoryNonBusinessHours->where('registry_id', $id)->update([
+                            $this->repositoryNonBusinessHours->find($value['id'])->update([
                                 'entry_time'            => $value['entry_time'],
                                 'lunch_entry_time'      => $value['lunch_entry_time'],
                                 'lunch_out_time'        => $value['lunch_out_time'],
@@ -270,7 +267,7 @@ class BusinessHoursController extends Controller
                             $hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
                             $minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
 
-                            $this->repositoryNonBusinessHours->where('registry_id', $id)->update([
+                            $this->repositoryNonBusinessHours->find($value['id'])->update([
                                 'entry_time'            => $value['entry_time'],
                                 'lunch_entry_time'      => $value['lunch_entry_time'],
                                 'lunch_out_time'        => $value['lunch_out_time'],
@@ -331,19 +328,20 @@ class BusinessHoursController extends Controller
             if ($result->consults !== null) {
                 foreach ($result->consults as $value) {
 
-                    $count = $this->repositoryConsultation->where('registry_id', $id)->count();
-
-                    if ($count > 0) {
-                        $this->repositoryConsultation->where('registry_id', $id)->update([
+                    if ($value['id'] !== null) {
+                        $this->repositoryConsultation->find($value['id'])->update([
                             'queries'           => $value['queries'],
-                            'description'       => $value['description']
+                            'description'       => $value['description'],
+                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
                         ]);
                     } else {
+                        //dd("sem ID");
                         $this->repositoryConsultation->create([
                             'id'                => Tempus::uuid(),
                             'registry_id'       => $id,
                             'queries'           => $value['queries'],
-                            'description'       => $value['description']
+                            'description'       => $value['description'],
+                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
                         ]);
                     }
                 }
@@ -392,10 +390,10 @@ class BusinessHoursController extends Controller
             $dados[$k]['business'] = $this->repositoryNonBusinessHours->where('registry_id', $value['id'])->get();
             $dados[$k]['consults'] = $this->repositoryConsultation->where('registry_id', $value['id'])->get();
 
-            $updateStatus =  BusinessHours::find($value['id']);
+            /* $updateStatus =  BusinessHours::find($value['id']);
             $updateStatus->update([
                 'status' => 'generation'
-            ]);
+            ]); */
         }
 
         //dd($dados);
