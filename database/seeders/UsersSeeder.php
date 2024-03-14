@@ -33,6 +33,7 @@ class UsersSeeder extends Seeder
                 'status'            => 1,
                 'admin'             => 1,
                 'manager'           => 0,
+                'user_interpres_code' => 'desenv'
             ],
             [
                 'name'              => "Wilson Felix",
@@ -46,6 +47,7 @@ class UsersSeeder extends Seeder
                 'status'            => 1,
                 'admin'             => 0,
                 'manager'           => 1,
+                'user_interpres_code' => 'wfelix'
             ],
             [
                 'name'              => "Juliana Jesus",
@@ -59,6 +61,7 @@ class UsersSeeder extends Seeder
                 'status'            => 1,
                 'admin'             => 0,
                 'manager'           => 0,
+                'user_interpres_code' => 'jjesus'
             ],
 
         ];
@@ -78,7 +81,8 @@ class UsersSeeder extends Seeder
                     'status'            => $items['status'],
                     'admin'             => $items['admin'],
                     'manager'           => $items['manager'],
-                    'group_id'          => $groupAdmin->id
+                    'group_id'          => $groupAdmin->id,
+                    'user_interpres_code' => $items['user_interpres_code']
 
                 ]);
             }else {
@@ -95,7 +99,8 @@ class UsersSeeder extends Seeder
                     'status'            => $items['status'],
                     'admin'             => $items['admin'],
                     'manager'           => $items['manager'],
-                    'group_id'          => $groupWilson->id
+                    'group_id'          => $groupWilson->id,
+                    'user_interpres_code' => $items['user_interpres_code']
 
                 ]);
             }
