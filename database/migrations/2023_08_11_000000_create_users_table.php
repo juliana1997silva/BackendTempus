@@ -30,7 +30,7 @@ class CreateUsersTable extends Migration
             $table->integer('status');
             $table->integer('admin')->default(0);
             $table->integer('manager')->default(0);
-            $table->string('user_interpres_code');
+            $table->string('user_interpres_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

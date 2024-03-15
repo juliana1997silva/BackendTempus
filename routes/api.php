@@ -12,6 +12,8 @@ use App\Http\Controllers\EventsController;
 use Fruitcake\Cors\HandleCors;
 
 
+Route::get('/consults', [ConsultationController::class, 'index']);
+Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
 
 Route::group(['middleware' => ['cors']], function () {
 

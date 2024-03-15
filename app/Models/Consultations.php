@@ -10,12 +10,12 @@ class Consultations extends Model
     use HasFactory;
 
     public $incrementing = false;
-
+    protected $primaryKey = 'request_key';
 
     protected $fillable = [
         'id',
+        'user_id',
         'registry_id',
-        'queries',
         'description',
         'link',
         'request_key',
@@ -46,7 +46,7 @@ class Consultations extends Model
         'bug',
         'daily',
         'update',
-        'service_forecast'
-
+        'service_forecast',
+        'commit'
     ];
 }
