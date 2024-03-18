@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupsController extends Controller
 {
+    //PARTE VINCULAR GRUPO X USER
+    public function listGroups()
+    {
+        $groups = Groups::all();
+        return response()->json($groups, 200);
+    }
 
 
     //listar grupo
@@ -20,10 +26,12 @@ class GroupsController extends Controller
             $groups = Groups::all();
         } else {
             $groups = Groups::where('id', $user->team_id)->get();
-        }
+        }       
 
         return response()->json($groups, 200);
     }
+
+    
             
 
     //criar grupo
@@ -37,7 +45,6 @@ class GroupsController extends Controller
             $groups = Groups::create([
                 'id' => Tempus::uuid(),
                 'name' => $result->name,
-                'manager' => $result->manager,
                 'status' => 1
             ]);
             return response()
@@ -60,7 +67,6 @@ class GroupsController extends Controller
 
             $groups->update([
                 'name' => $result->name,
-                'manager' => $result->manager
             ]);
 
             return response()->json("Atualizado com sucesso", 200);

@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('lunch_out_time');
             $table->string('out_time');
             $table->string('password');
-            $table->string('team_id');
+            $table->string('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('groups');
             $table->integer('status');
             $table->integer('admin')->default(0);

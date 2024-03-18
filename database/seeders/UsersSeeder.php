@@ -17,7 +17,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        $groupAdmin = Groups::where("name", "Administrador")->first();
+        $groupAdmin = Groups::where("name", "Desenv")->first();
         $groupWilson = Groups::where("name", "Equipe Wilson")->first();
 
         $users = [

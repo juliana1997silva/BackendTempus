@@ -19,24 +19,21 @@ class GroupsSeeder extends Seeder
     {
         $groups = [
             [
-                'name' => "Administrador",
-                'manager' => "Administrador",
+                'name' => "Desenv",
                 'status' => 1
             ],
             [
                 'name' => "Equipe Wilson",
-                'manager' => "Wilson Felix",
                 'status' => 1
             ],
         ];
 
-        foreach($groups as $items){
+        foreach ($groups as $items) {
             Groups::create([
                 'id'      => Tempus::uuid(),
                 'name'    => $items['name'],
-                'manager' => $items['manager'],
                 'status'  => $items['status']
             ]);
-        }        
+        }
     }
 }

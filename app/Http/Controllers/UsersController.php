@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Users;
 use App\Helpers\Tempus;
 use App\Http\Requests\UsersRequest;
+use App\Models\Groups;
+use App\Models\UsersGroups;
 use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,21 +22,23 @@ class UsersController extends Controller
         $this->repository = $repository;
     }
 
+    public function listUsers($id) {
+
+        $users_rsl = Users::where("team_id", $id)
+        ->orWhereNull("team_id")
+        ->get();
+        return response()->json($users_rsl, 200);
+    }
+
     //listar usuarios
     public function index()
     {
-
         $user = Auth::user();
+        $users = Users::where("team_id", $user->team_id)
+            //->where('manager', 0)
+            ->get();
 
-        if ($user->admin === 1) {
-            $users = Users::all();
-            return response()->json($users, 200);
-        } else {
-            $users = Users::where("team_id", $user->team_id)
-                //->where('manager', 0)
-                ->get();
-            return response()->json($users, 200);
-        }
+        return response()->json($users, 200);
     }
 
     //criar usuarios
@@ -42,12 +46,14 @@ class UsersController extends Controller
     {
         $result = (object)$request->handle();
 
-        Users::create([
+        $group = Groups::where("name", "Desenv")->first();
+
+        $user = Users::create([
             'id'                => Tempus::uuid(),
             'name'              => $result->name,
             'phone'             => $result->phone,
             'email'             => $result->email,
-            'team_id'          => $result->team_id,
+            'team_id'           => NULL,
             'entry_time'        => $result->entry_time,
             'lunch_entry_time'  => $result->lunch_entry_time,
             'lunch_out_time'    => $result->lunch_out_time,
@@ -57,6 +63,13 @@ class UsersController extends Controller
             'admin'             => $result->admin,
             'manager'             => $result->manager,
             'user_interpres_code' => $result->user_interpres_code
+
+        ]);
+
+        UsersGroups::create([
+            'id'                => Tempus::uuid(),
+            'user_id'              => $user->id,
+            'group_id'             => $group->id,
         ]);
 
         return response()

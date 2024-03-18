@@ -9,6 +9,7 @@ use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CoordinatorsController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\UserGroupsController;
 use Fruitcake\Cors\HandleCors;
 
 
@@ -23,7 +24,7 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('/pdf/{id}', [BusinessHoursController::class, 'generation']);
 
 
-    
+
 
     Route::middleware('auth:sanctum')->group(function () {
 
@@ -32,6 +33,7 @@ Route::group(['middleware' => ['cors']], function () {
 
         //usuarios
         Route::get('/users', [UsersController::class, "index"]);
+        Route::get('/users/list/{id}', [UsersController::class, "listUsers"]);
         Route::post('/users', [UsersController::class, "store"]);
         Route::put('/users/{id}', [UsersController::class, "update"]);
         Route::patch('/users/release/{id}', [UsersController::class, "release"]);
@@ -46,6 +48,7 @@ Route::group(['middleware' => ['cors']], function () {
 
         //grupos
         Route::get('/group', [GroupsController::class, 'index']);
+        Route::get('/groups', [GroupsController::class, 'listGroups']);
         Route::post('/group', [GroupsController::class, 'create']);
         Route::put('/group/{id}', [GroupsController::class, 'update']);
         Route::patch('/group/release/{id}', [GroupsController::class, 'release']);
@@ -67,5 +70,8 @@ Route::group(['middleware' => ['cors']], function () {
         Route::post('/events', [EventsController::class, 'create']);
         Route::get('/events', [EventsController::class, 'index']);
         Route::put('/events/{id}', [EventsController::class, 'update']);
+
+        //vincular usuario ao grupo
+        Route::post('/users/groups', [UserGroupsController::class, 'store']);
     });
 });
