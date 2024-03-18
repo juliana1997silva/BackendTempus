@@ -18,6 +18,7 @@ class CustomHttpClient
 
         curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_POST, true);
+        curl_setopt($this->ch, CURLOPT_VERBOSE, false);
         curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(

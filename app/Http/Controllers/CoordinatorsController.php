@@ -24,7 +24,7 @@ class CoordinatorsController extends Controller
             $Coordinator = Coordinators::create([
                 'id' => Tempus::uuid(),
                 'name' => $result->name,
-                'group_id' => $result->group_id,
+                'team_id' => $result->team_id,
                 'status' => 1
             ]);
 

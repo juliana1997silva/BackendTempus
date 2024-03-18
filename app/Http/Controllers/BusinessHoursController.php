@@ -384,7 +384,7 @@ class BusinessHoursController extends Controller
 
         $user = $this->repositoryUsers->find($id);
 
-        $coordenadores = $this->repositoryUsers->where('group_id', $user->group_id)->where('manager', 1)->first();
+        $coordenadores = $this->repositoryUsers->where('team_id', $user->team_id)->where('manager', 1)->first();
 
         foreach ($dados as $k => $value) {
             $dados[$k]['business'] = $this->repositoryNonBusinessHours->where('registry_id', $value['id'])->get();

@@ -30,7 +30,7 @@ class UsersController extends Controller
             $users = Users::all();
             return response()->json($users, 200);
         } else {
-            $users = Users::where("group_id", $user->group_id)
+            $users = Users::where("team_id", $user->team_id)
                 //->where('manager', 0)
                 ->get();
             return response()->json($users, 200);
@@ -47,7 +47,7 @@ class UsersController extends Controller
             'name'              => $result->name,
             'phone'             => $result->phone,
             'email'             => $result->email,
-            'group_id'          => $result->group_id,
+            'team_id'          => $result->team_id,
             'entry_time'        => $result->entry_time,
             'lunch_entry_time'  => $result->lunch_entry_time,
             'lunch_out_time'    => $result->lunch_out_time,
@@ -73,7 +73,7 @@ class UsersController extends Controller
             'name'              => $result->name,
             'phone'             => $result->phone,
             'email'             => $result->email,
-            'group_id'          => $result->group_id,
+            'team_id'          => $result->team_id,
             'entry_time'        => $result->entry_time,
             'lunch_entry_time'  => $result->lunch_entry_time,
             'lunch_out_time'    => $result->lunch_out_time,

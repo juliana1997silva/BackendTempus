@@ -81,7 +81,7 @@ class UsersSeeder extends Seeder
                     'status'            => $items['status'],
                     'admin'             => $items['admin'],
                     'manager'           => $items['manager'],
-                    'group_id'          => $groupAdmin->id,
+                    'team_id'          => $groupAdmin->id,
                     'user_interpres_code' => $items['user_interpres_code']
 
                 ]);
@@ -99,7 +99,7 @@ class UsersSeeder extends Seeder
                     'status'            => $items['status'],
                     'admin'             => $items['admin'],
                     'manager'           => $items['manager'],
-                    'group_id'          => $groupWilson->id,
+                    'team_id'          => $groupWilson->id,
                     'user_interpres_code' => $items['user_interpres_code']
 
                 ]);

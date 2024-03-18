@@ -15,7 +15,7 @@ class Coordinators extends Model
     protected $fillable = [
         'id',
         'name',
-        'group_id',
+        'team_id',
         'status'
     ];
 }

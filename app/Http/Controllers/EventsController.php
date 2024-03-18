@@ -18,7 +18,7 @@ class EventsController extends Controller
         if ($user->admin === 1) {
             $events = Events::all();
         } else if ($user->manager === 1) {
-            $users = Users::where('group_id', $user->group_id)->get();
+            $users = Users::where('team_id', $user->team_id)->get();
             foreach ($users as $value) {
                 $events = Events::where('user_id', $value['id'])->get();
             }

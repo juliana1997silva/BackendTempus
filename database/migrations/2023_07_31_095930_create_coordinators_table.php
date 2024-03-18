@@ -16,8 +16,8 @@ class CreateCoordinatorsTable extends Migration
         Schema::create('coordinators', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('group_id');
-            $table->foreign('group_id')->references('id')->on('groups');
+            $table->string('team_id');
+            $table->foreign('team_id')->references('id')->on('groups');
             $table->integer('status');
             $table->timestamps();
         });

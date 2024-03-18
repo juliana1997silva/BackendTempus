@@ -19,7 +19,7 @@ class GroupsController extends Controller
         if ($user->admin === 1) {
             $groups = Groups::all();
         } else {
-            $groups = Groups::where('id', $user->group_id)->get();
+            $groups = Groups::where('id', $user->team_id)->get();
         }
 
         return response()->json($groups, 200);

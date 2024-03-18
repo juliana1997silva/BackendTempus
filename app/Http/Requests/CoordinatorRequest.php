@@ -28,7 +28,7 @@ class CoordinatorRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'group_id' => 'required|string',
+            'team_id' => 'required|string',
         ];
     }
 
@@ -41,7 +41,7 @@ class CoordinatorRequest extends FormRequest
     {
         return [
             'name.required' => "Nome Obrigatorio",
-            'group_id.required' => "Id do Grupo Obrigatorio",
+            'team_id.required' => "Id do Grupo Obrigatorio",
         ];
     }
 
@@ -49,7 +49,7 @@ class CoordinatorRequest extends FormRequest
     {
         return [
             'name' => $this->name,
-            'group_id' => $this->group_id,  
+            'team_id' => $this->team_id,  
         ];
     }
 }

@@ -18,7 +18,7 @@ class AuthController extends Controller
         $result = (object)$request->handle();
 
         $user = Users::where('email', $result->email)->first();
-        $group = Groups::find($user->group_id);
+        $group = Groups::find($user->team_id);
 
         if ($user) {
 
@@ -30,14 +30,14 @@ class AuthController extends Controller
                 if($user->status === 1 && $group->status === 1 ){
                     $token = $user->createToken('auth_token');
 
-                    $nameGroup = Groups::find($user->group_id);
+                    $nameGroup = Groups::find($user->team_id);
 
                     $response = [
                         'id'                => $user->id,
                         'name'              => $user->name,
                         'phone'             => $user->phone,
                         'email'             => $user->email,
-                        'group_id'          => $user->group_id,
+                        'team_id'          => $user->team_id,
                         'entry_time'        => $user->entry_time,
                         'lunch_entry_time'  => $user->lunch_entry_time,
                         'lunch_out_time'    => $user->lunch_out_time,

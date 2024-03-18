@@ -70,6 +70,7 @@ class ConsultationController extends Controller
                 ]
             );
 
+            // return response()->json($resultado,  200);s
             $data = [];
 
 
@@ -149,6 +150,12 @@ class ConsultationController extends Controller
                                         $data['event']['category']['history'][$key]['user'] = $event['user_id'];
                                     }
                                 }
+
+                                if ( strstr($event['message'],"Início previsto de") || strstr($event['message'],"Fim previsto de") ) {
+                                    $data['event']['status']['history'][$key]['message'] = $event['message'];
+                                    $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
+                                    $data['event']['status']['history'][$key]['user'] = $event['user_id'];
+                                }
                                 break;
                             case '104':
                                 if ( $event['user_id'] == $user) {
@@ -167,6 +174,11 @@ class ConsultationController extends Controller
                                     }
                                 }
                                 break;
+                            default:
+                                // $data['event']['status']['history'][$key]['message'] = $event['message'];
+                                // $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
+                                // $data['event']['status']['history'][$key]['user'] = $event['user_id'];
+                                break;
                         }
                     }
                 }
@@ -177,6 +189,7 @@ class ConsultationController extends Controller
                     "query" => "cvs",
                     "action" => "list",
                     "request_key" => "$consulta",
+                    "dates" => "no",
                     "_" => "1710176337413"
                 ]
             );
@@ -274,16 +287,16 @@ class ConsultationController extends Controller
             $data['points']['commit'] = 0;            
             $data['unknown'] = "unknown";
             
+            //return response()->json($data,  200);
             //////////// VERIFICAÇÃO DO STATUS
             foreach ( $data as $key => $value) {
                 switch ($key) {
-                    case 'message':
+                    case 'status_description':
                         if ( strstr($value,$user) ) {
                             $data['points']['daily']++;
                         }
                         break;
                     case 'event':
-                        echo "ITEM: $key\n";
                         // TRATAR SITUAÇÃO
                         if ( is_array($value) && isset($value['status']) )  {
                             if ( isset($value['status']['history']) )  {
@@ -307,6 +320,15 @@ class ConsultationController extends Controller
                                         $data['points']['revision']++;
                                     }
                                     
+                                    if ( strstr($history_item['message'],"Início previsto de") ) {
+                                        $data['points']['service_forecast']++;
+                                    }
+
+                                    if ( strstr($history_item['message'],"Fim previsto de") ) {
+                                        $data['points']['service_forecast']++;
+                                    }
+                                    
+
                                 }
                                 
                             }
