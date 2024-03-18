@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Users;
 
 class ConsultationResource extends JsonResource
 {
@@ -14,10 +15,11 @@ class ConsultationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = Users::where('user_interpres_code',$this->user_id)->first();
 
         $response = [
             "request_key" => $this->request_key,
-            "user" => $this->user_id,
+            "user" => $user->name,
             "situation" => $this->status,
             "documentation" => $this->documentation,
             "revision" => $this->revision,
@@ -25,7 +27,8 @@ class ConsultationResource extends JsonResource
             "daily" => $this->daily,
             "update" => $this->update,
             "service_forecast" => $this->service_forecast,
-            "commit" => $this->commit
+            "commit" => $this->commit,
+            "link" => $this->link
         ];
 
         return $response;

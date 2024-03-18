@@ -31,7 +31,7 @@ class UsersController extends Controller
             return response()->json($users, 200);
         } else {
             $users = Users::where("group_id", $user->group_id)
-                ->where('manager', 0)
+                //->where('manager', 0)
                 ->get();
             return response()->json($users, 200);
         }
