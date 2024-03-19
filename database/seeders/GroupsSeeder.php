@@ -19,11 +19,35 @@ class GroupsSeeder extends Seeder
     {
         $groups = [
             [
-                'name' => "Desenv",
+                'name' => "Desenvolvimento",
                 'status' => 1
             ],
             [
                 'name' => "Equipe Wilson",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Josmi",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Caio",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Bianou",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Diego",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Renato",
+                'status' => 1
+            ],
+            [
+                'name' => "Equipe Miriã",
                 'status' => 1
             ],
         ];
