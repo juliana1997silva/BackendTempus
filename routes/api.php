@@ -16,6 +16,7 @@ use Fruitcake\Cors\HandleCors;
 Route::get('/consults', [ConsultationController::class, 'index']);
 Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
 
+
 Route::group(['middleware' => ['cors']], function () {
 
     //login
@@ -33,12 +34,11 @@ Route::group(['middleware' => ['cors']], function () {
 
         //usuarios
         Route::get('/users', [UsersController::class, "index"]);
-        Route::get('/users/list/{id}', [UsersController::class, "listUsers"]);
         Route::post('/users', [UsersController::class, "store"]);
         Route::put('/users/{id}', [UsersController::class, "update"]);
         Route::patch('/users/release/{id}', [UsersController::class, "release"]);
         Route::delete('/users/{id}', [UsersController::class, 'destroy']);
-
+        Route::get('/users/list/{id}', [UsersController::class, "listUserByGroup"]);
 
         //coordenadores
         Route::get('/manager', [CoordinatorsController::class, 'index']);

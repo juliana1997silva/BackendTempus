@@ -2,32 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Users;
-use App\Helpers\Tempus;
-use App\Http\Requests\UsersRequest;
-use App\Models\Groups;
-use App\Models\UsersGroups;
-use App\Repositories\UsersRepository;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Controllers\Controller;
+
+use App\Helpers\Tempus;
+
+use App\Models\Users;
+use App\Models\Groups;
+use App\Models\UsersGroups;
+
+use App\Http\Requests\UsersRequest;
+
+use App\Http\Resources\UsersGroupsResource;
+
+use App\Repositories\GroupsRepository;
+use App\Repositories\UsersRepository;
+use App\Repositories\UsersGroupsRepository;
+
+
 class UsersController extends Controller
 {
-    protected $repository;
+    protected $usersRepository;
+
+    protected $usersGroupsRepository;
+
+    protected $groupsRepository;
 
 
-    public function __construct(UsersRepository $repository)
+    public function __construct(
+        UsersRepository $usersRepository,
+        UsersGroupsRepository $usersGroupsRepository,
+        GroupsRepository $groupsRepository
+    )
     {
-        $this->repository = $repository;
-    }
-
-    public function listUsers($id) {
-
-        $users_rsl = Users::where("team_id", $id)
-        ->orWhereNull("team_id")
-        ->get();
-        return response()->json($users_rsl, 200);
+        $this->usersRepository = $usersRepository;
+        $this->usersGroupsRepository = $usersGroupsRepository;
+        $this->groupsRepository = $groupsRepository;
     }
 
     //listar usuarios
@@ -41,12 +54,77 @@ class UsersController extends Controller
         return response()->json($users, 200);
     }
 
+
+    public function listUserByGroup($id) {
+
+        $users_by_groups = $this->usersGroupsRepository->get();
+        $groups = $this->groupsRepository->get();
+        $users = $this->usersRepository->get();
+
+        $group_id_dev = "";
+        foreach($groups as $group) {
+            if ( $group->name == "Desenvolvimento" ) {
+                $group_id_dev = $group->id;
+            }
+        }
+        
+        $response = [];
+        foreach ( $users_by_groups as $users_by_group_item ) {
+            if ( $users_by_group_item->group_id == $id )
+                $user_group[$users_by_group_item->group_id][$users_by_group_item->user_id] = 1;
+            else
+                $user_group[$users_by_group_item->group_id][$users_by_group_item->user_id] = 1;
+        }
+
+        foreach ( $user_group[$group_id_dev] as $id_user => $v ) {
+            // dd( $id_user);
+            if ( isset($user_group[$id][$id_user]) ) {
+                unset($user_group[$group_id_dev][$id_user]);
+            }
+        }
+
+        foreach ( $user_group[$id] as $id_user => $v ) {
+            foreach ( $users as $user ) {
+
+                if ( $id_user == $user->id ) {
+                    $user_data = [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'team_id' => $id,
+                    ];
+        
+                    $response[] = $user_data;
+                }
+            } 
+        }
+
+
+        foreach ( $user_group[$group_id_dev] as $id_user => $v ) {
+            foreach ( $users as $user ) {
+
+                if ( $id_user == $user->id ) {
+                    $user_data = [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'team_id' => $group_id_dev,
+                    ];
+        
+                    $response[] = $user_data;
+                }
+            } 
+        }
+        
+
+
+        return response()->json($response, 200);
+    }
+
     //criar usuarios
     public function store(UsersRequest $request)
     {
         $result = (object)$request->handle();
 
-        $group = Groups::where("name", "Desenv")->first();
+        $group = Groups::where("name", "Desenvolvimento")->first();
 
         $user = Users::create([
             'id'                => Tempus::uuid(),
@@ -81,7 +159,7 @@ class UsersController extends Controller
     {
         $result = (object)$request->handle();
 
-        $user = $this->repository->find($id);
+        $user = $this->usersRepository->find($id);
         $user->update([
             'name'              => $result->name,
             'phone'             => $result->phone,
@@ -103,7 +181,7 @@ class UsersController extends Controller
     //atualizar status do usuarios
     public function release($id)
     {
-        $users =  $this->repository->find($id);
+        $users =  $this->usersRepository->find($id);
 
         if ($users->status > 0) {
             $users->update(['status' => 0]);

@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UsersGroups extends Model
+use App\Contracts\UsersGroups as UsersGroupsContracts;
+
+class UsersGroups extends Model implements UsersGroupsContracts
 {
     use HasFactory;
 
@@ -17,4 +19,9 @@ class UsersGroups extends Model
             'group_id',
             'user_id'
     ];
+
+    public function users()
+    {
+        return $this->hasOne(UsersProxy::modelClass(), 'id','user_id');
+    }
 }
