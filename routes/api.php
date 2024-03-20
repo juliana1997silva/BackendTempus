@@ -14,6 +14,8 @@ use Fruitcake\Cors\HandleCors;
 
 
 Route::get('/consults', [ConsultationController::class, 'index']);
+Route::get('/consult/{id}/{user}', [ConsultationController::class, 'show']);
+Route::put('/consults', [ConsultationController::class, 'update']);
 Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
 
 
@@ -23,8 +25,6 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('/signin', [AuthController::class, 'signin']);
     //gerar PDF
     Route::get('/pdf/{id}', [BusinessHoursController::class, 'generation']);
-
-
 
 
     Route::middleware('auth:sanctum')->group(function () {

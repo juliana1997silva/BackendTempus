@@ -226,6 +226,7 @@ class BusinessHoursController extends Controller
                     'lunch_out_time'                    => $result->lunch_out_time,
                     'out_time'                          => $result->out_time,
                     'total_time'                        => $hours . ':' . $minutes,
+                    'status'                            => 'pending'
                 ]);
             } else {
                 response()->json(['message' => 'Registro não encontrado'], 422);

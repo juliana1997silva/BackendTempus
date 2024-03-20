@@ -17,7 +17,10 @@ class AuthController extends Controller
 
         $result = (object)$request->handle();
 
+        $user = NULL;
         $user = Users::where('email', $result->email)->first();
+        // if ( $user != NULL )
+        //     $user = Users::where('user_interpres_code', $result->email)->first();
         $group = Groups::find($user->team_id);
 
         if ($user) {

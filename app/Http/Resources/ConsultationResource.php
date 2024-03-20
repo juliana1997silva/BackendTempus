@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Users;
+use App\Models\Groups;
+use App\Models\UsersGroups;
 
 class ConsultationResource extends JsonResource
 {
@@ -16,6 +18,10 @@ class ConsultationResource extends JsonResource
     public function toArray($request)
     {
         $user = Users::where('user_interpres_code',$this->user_id)->first();
+        $group = Groups::where('name','Desenvolvimento')->first();
+        $group_selected = UsersGroups::where('user_id',$user->id)->where('group_id','!=',$group->id)->first();
+        if ($group_selected != NULL) 
+            $group_user = Groups::where('id',$group_selected->group_id)->first();
 
         $situation_list = [
             "1" => " Indefinida",
@@ -53,7 +59,9 @@ class ConsultationResource extends JsonResource
 
         $response = [
             "request_key" => $this->request_key,
-            "user" => $user->name,
+            "user" => ($user != NULL) ? $user->name : 'NA',
+            "user_interpres_code" => ($user != NULL) ? $user->user_interpres_code : 'NA',
+            "team_id" => ($group_user != NULL) ? $group_user->name : 'NA',
             "situation" => isset($situation_list[$this->status]) ? $situation_list[$this->status] : 'NA',
             "documentation" => $this->documentation,
             "revision" => $this->revision,

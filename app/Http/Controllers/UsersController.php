@@ -58,16 +58,11 @@ class UsersController extends Controller
     public function listUserByGroup($id) {
 
         $users_by_groups = $this->usersGroupsRepository->get();
-        $groups = $this->groupsRepository->get();
+        $group = $this->groupsRepository->where('name','Desenvolvimento')->first();
         $users = $this->usersRepository->get();
 
-        $group_id_dev = "";
-        foreach($groups as $group) {
-            if ( $group->name == "Desenvolvimento" ) {
-                $group_id_dev = $group->id;
-            }
-        }
-        
+        $group_id_dev = $group->id;
+
         $response = [];
         foreach ( $users_by_groups as $users_by_group_item ) {
             if ( $users_by_group_item->group_id == $id )
@@ -83,35 +78,39 @@ class UsersController extends Controller
             }
         }
 
-        foreach ( $user_group[$id] as $id_user => $v ) {
-            foreach ( $users as $user ) {
+        if ( isset($user_group[$id]) ) {
+            foreach ( $user_group[$id] as $id_user => $v ) {
+                foreach ( $users as $user ) {
 
-                if ( $id_user == $user->id ) {
-                    $user_data = [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'team_id' => $id,
-                    ];
-        
-                    $response[] = $user_data;
-                }
-            } 
+                    if ( $id_user == $user->id ) {
+                        $user_data = [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'team_id' => $id,
+                        ];
+            
+                        $response[] = $user_data;
+                    }
+                } 
+            }
         }
 
 
-        foreach ( $user_group[$group_id_dev] as $id_user => $v ) {
-            foreach ( $users as $user ) {
+        if ( isset($user_group[$group_id_dev]) ) {
+            foreach ( $user_group[$group_id_dev] as $id_user => $v ) {
+                foreach ( $users as $user ) {
 
-                if ( $id_user == $user->id ) {
-                    $user_data = [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'team_id' => $group_id_dev,
-                    ];
-        
-                    $response[] = $user_data;
-                }
-            } 
+                    if ( $id_user == $user->id ) {
+                        $user_data = [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'team_id' => $group_id_dev,
+                        ];
+            
+                        $response[] = $user_data;
+                    }
+                } 
+            }
         }
         
 
@@ -127,19 +126,19 @@ class UsersController extends Controller
         $group = Groups::where("name", "Desenvolvimento")->first();
 
         $user = Users::create([
-            'id'                => Tempus::uuid(),
-            'name'              => $result->name,
-            'phone'             => $result->phone,
-            'email'             => $result->email,
-            'team_id'           => NULL,
-            'entry_time'        => $result->entry_time,
-            'lunch_entry_time'  => $result->lunch_entry_time,
-            'lunch_out_time'    => $result->lunch_out_time,
-            'out_time'          => $result->out_time,
-            'password'          => Hash::make($result->password),
-            'status'            => $result->status,
-            'admin'             => $result->admin,
-            'manager'             => $result->manager,
+            'id'                  => Tempus::uuid(),
+            'name'                => $result->name,
+            'phone'               => $result->phone,
+            'email'               => $result->email,
+            'team_id'             => NULL,
+            'entry_time'          => $result->entry_time,
+            'lunch_entry_time'    => $result->lunch_entry_time,
+            'lunch_out_time'      => $result->lunch_out_time,
+            'out_time'            => $result->out_time,
+            'password'            => Hash::make($result->password),
+            'status'              => $result->status,
+            'admin'               => $result->admin,
+            'manager'             => isset($result->manager) ? $result->manager : 0,
             'user_interpres_code' => $result->user_interpres_code
 
         ]);

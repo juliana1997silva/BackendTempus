@@ -6,6 +6,7 @@ use App\Helpers\Tempus;
 use App\Http\Requests\UserGroupsRequest;
 use App\Models\Groups;
 use App\Models\UsersGroups;
+use DB;
 
 class UserGroupsController extends Controller
 {
@@ -14,6 +15,7 @@ class UserGroupsController extends Controller
         $result = (object)$request->handle();
 
         $groups = Groups::find($result->group_id);
+        DB::table('users_groups')->where('group_id',$result->group_id)->delete();
 
         foreach ($result->user_id as $value) {
             UsersGroups::create([
@@ -22,6 +24,6 @@ class UserGroupsController extends Controller
                 'user_id' => $value
             ]);
         }
-        return response()->json("Usuario(s) vinculado ao grupo " . $groups->name . "com sucesso", 200);
+        return response()->json("Usuario(s) vinculado ao grupo " . $groups->name . " com sucesso", 200);
     }
 }

@@ -10,14 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupsController extends Controller
 {
-    //PARTE VINCULAR GRUPO X USER
-    public function listGroups()
-    {
-        $groups = Groups::all();
-        return response()->json($groups, 200);
-    }
-
-
     //listar grupo
     public function index()
     {
@@ -32,7 +24,13 @@ class GroupsController extends Controller
     }
 
     
-            
+    //PARTE VINCULAR GRUPO X USER
+    public function listGroups()
+    {
+        $groups = Groups::where('name','!=','Desenvolvimento')->orderBy('name')->get();
+        return response()->json($groups, 200);
+    }
+           
 
     //criar grupo
     public function create(GroupsRequest $request)
