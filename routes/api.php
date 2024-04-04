@@ -9,6 +9,7 @@ use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CoordinatorsController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\UserGroupsController;
 use Fruitcake\Cors\HandleCors;
 
@@ -17,6 +18,15 @@ Route::get('/consults', [ConsultationController::class, 'index']);
 Route::get('/consult/{id}/{user}', [ConsultationController::class, 'show']);
 Route::put('/consults', [ConsultationController::class, 'update']);
 Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
+
+
+Route::post('/permission', [PermissionsController::class, 'store']);
+Route::post('/permission/{id}/images', [PermissionsController::class, 'updateImage']);
+Route::get('/permission', [PermissionsController::class, 'index']);
+Route::put('/permission/{idGroup}/connect/{idPermission}', [PermissionsController::class, 'connect']);
+Route::get('/permission/groups/{id}', [PermissionsController::class, 'listGroupsPermissions']);
+Route::put('/permission/{id}', [PermissionsController::class, 'update']);
+Route::delete('/permission/{id}', [PermissionsController::class, 'delete']);
 
 
 Route::group(['middleware' => ['cors']], function () {

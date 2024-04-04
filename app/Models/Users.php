@@ -55,4 +55,9 @@ class Users extends Authenticatable implements UsersContracts
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function groups()
+    {
+        return $this->hasOne(UsersGroupsProxy::modelClass(), 'user_id');
+    }
 }

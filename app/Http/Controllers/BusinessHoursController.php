@@ -150,6 +150,7 @@ class BusinessHoursController extends Controller
                             'lunch_entry_time'      => isset($value['lunch_entry_time']) ? $value['lunch_entry_time'] : null,
                             'lunch_out_time'        => isset($value['lunch_out_time']) ? $value['lunch_out_time'] : null,
                             'out_time'              => $value['out_time'],
+                            'observation'           => $value['observation'],
                             'total_time'            => $hours . ':' . $minutes,
 
 
@@ -170,6 +171,7 @@ class BusinessHoursController extends Controller
                             'lunch_entry_time'      => isset($value['lunch_entry_time']) ? $value['lunch_entry_time'] : null,
                             'lunch_out_time'        => isset($value['lunch_out_time']) ? $value['lunch_out_time'] : null,
                             'out_time'              => $value['out_time'],
+                            'observation'           => $value['observation'],
                             'total_time'            => $hours . ':' . $minutes,
 
 
@@ -257,6 +259,7 @@ class BusinessHoursController extends Controller
                                 'lunch_entry_time'      => $value['lunch_entry_time'],
                                 'lunch_out_time'        => $value['lunch_out_time'],
                                 'out_time'              => $value['out_time'],
+                                'observation'           => $value['observation'],
                                 'total_time'            => $hours . ':' . $minutes,
                             ]);
                         } else {
@@ -273,6 +276,7 @@ class BusinessHoursController extends Controller
                                 'lunch_entry_time'      => $value['lunch_entry_time'],
                                 'lunch_out_time'        => $value['lunch_out_time'],
                                 'out_time'              => $value['out_time'],
+                                'observation'           => $value['observation'],
                                 'total_time'            => $hours . ':' . $minutes,
                             ]);
                         }
@@ -296,6 +300,7 @@ class BusinessHoursController extends Controller
                                 'lunch_entry_time'      => isset($value['lunch_entry_time']) ? $value['lunch_entry_time'] : null,
                                 'lunch_out_time'        => isset($value['lunch_out_time']) ? $value['lunch_out_time'] : null,
                                 'out_time'              => $value['out_time'],
+                                'observation'           => $value['observation'],
                                 'total_time'            => $hours . ':' . $minutes,
 
 
@@ -317,6 +322,7 @@ class BusinessHoursController extends Controller
                                 'lunch_entry_time'      => isset($value['lunch_entry_time']) ? $value['lunch_entry_time'] : null,
                                 'lunch_out_time'        => isset($value['lunch_out_time']) ? $value['lunch_out_time'] : null,
                                 'out_time'              => $value['out_time'],
+                                'observation'           => $value['observation'],
                                 'total_time'            => $hours . ':' . $minutes,
 
 
