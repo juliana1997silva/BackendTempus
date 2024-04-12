@@ -7,13 +7,15 @@ use App\Http\Requests\AuthRequest;
 use App\Models\Groups;
 use App\Models\Users;
 use App\Repositories\GroupPermissionsRepository;
+use App\Repositories\GroupsRepository;
 use App\Repositories\PermissionsRepository;
 use App\Repositories\UsersGroupsRepository;
 use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller  {
+class AuthController extends Controller
+{
 
     /**
      * permissionsRepository object
@@ -43,18 +45,26 @@ class AuthController extends Controller  {
      */
     protected $groupPermissionsRepository;
 
+    /**
+     * groupRepository object
+     *
+     * @var \App\Repositories\GroupsRepository
+     */
+    protected $groupsRepository;
+
     public function __construct(
         PermissionsRepository $permissionsRepository,
         UsersRepository $usersRepository,
         UsersGroupsRepository $userGroupRepository,
-        GroupPermissionsRepository $groupPermissionsRepository
-     
+        GroupPermissionsRepository $groupPermissionsRepository,
+        GroupsRepository $groupsRepository
+
     ) {
         $this->permissionsRepository = $permissionsRepository;
         $this->usersRepository = $usersRepository;
         $this->userGroupRepository = $userGroupRepository;
         $this->groupPermissionsRepository = $groupPermissionsRepository;
-       
+        $this->groupsRepository = $groupsRepository;
     }
 
     //realizar login
@@ -74,55 +84,26 @@ class AuthController extends Controller  {
                     'message' => 'Senha incorreta'
                 ], 401);
             } else {
-                if($user->status === 1 && $group->status === 1 ){
+                if ($user->status === 1 && $group->status === 1) {
                     $token = $user->createToken('auth_token');
-                   /*  $groups = $this->userGroupRepository->where('user_id', $user->id)->get();
+                    $groups = $this->userGroupRepository->where('user_id', $user->id)->get();
 
                     $permissionList = [];
-                    foreach($groups as $items){
-                        $listGroupPermissions[] = $this->groupPermissionsRepository->where('group_id', $items->group_id)->get();
-                        dd($listGroupPermissions);
-                        foreach($listGroupPermissions as $value){
-                            $permissionList[] = $this->permissionsRepository->where('id', $value->permissions_id)->get();
-                        }
-                    }
-                    dd($permissionList);
-                    //dd($this->userGroupRepository->where('group_id', $user->team_id));
-                    $group       = $user->groups()->first();
-                    $master = $user->admin === 1;
+                    foreach ($groups as $items) {
+                        $dataGroup = $this->groupsRepository->where('id', $items->group_id)->first();
 
-                    
+                        if ($dataGroup->name != "Desenvolvimento") {
+                            $groupPermissions = $this->groupPermissionsRepository->where('group_id', $items->group_id)->get();
 
-                    dd($group);
+                            foreach ($groupPermissions as $groupPermission) {
+                                $permission = $this->permissionsRepository->find($groupPermission->permissions_id);
 
-                    if ($group != null) {
-                        $rolePermissions = $group->groupPermissions()->get();
-
-                        // USUARIO MASTER PEGAR TODAS PERMISSÕES SEMPRE
-                        if ($master) {
-                            $permissions = $this->permissionsRepository->get();
-                            foreach ($permissions as $permission) {
-                                $permissionList[] = [
-                                    "role"               => $permission->name,
-                                    "status"             => $permission->status,
-                                    "image"              => $permission->image
-                                ];
-                            }
-                        } else {
-                            foreach ($rolePermissions as $rolePermission) {
-                                $permissions = $rolePermission->permissions()->get();
-
-                                foreach ($permissions as $permission) {
-                                    if ($permission->is_admin == 1 && $master == false) continue;
-
-                                    $permissionList[] = [
-                                        "role"               => $permission->name,
-                                        "status"             => $permission->status,
-                                        "image"              => $permission->image
-                                    ];
+                                if ($permission) {
+                                    $permissionList[] = $permission->name;
                                 }
                             }
-                        } */
+                        }
+                    }
 
                     $response = [
                         'id'                => $user->id,
@@ -138,7 +119,7 @@ class AuthController extends Controller  {
                         'admin'             => $user->admin,
                         'token'             => $token->plainTextToken,
                         'manager'           => $user->manager,
-                       /*  "permissions"       => $permissionList */
+                        "permissions"       => $permissionList
                     ];
 
                     return response()->json($response, 200);
@@ -147,9 +128,7 @@ class AuthController extends Controller  {
                         'message' => 'Usuário/Grupo está desativado ! '
                     ], 401);
                 }
-                
-            
-        }
+            }
         } else {
 
             return response()->json([
@@ -158,19 +137,20 @@ class AuthController extends Controller  {
         }
     }
 
-    public function forgoutPassword(AuthRequest $request){
+    public function forgoutPassword(AuthRequest $request)
+    {
         $user = Auth::user();
         $result = (object)$request->handle();
 
-        if(Hash::check($result->password, $user->password)){
-            if($result->new_password === $result->confirmation_password){
+        if (Hash::check($result->password, $user->password)) {
+            if ($result->new_password === $result->confirmation_password) {
                 $updateUser = Users::find($user->id);
                 $updateUser->update([
                     'password' => Hash::make($result->new_password)
                 ]);
 
                 return response()->json("Senha atualizada com sucesso .", 200);
-            }else {
+            } else {
                 return response()->json("As senhas não conferem .", 402);
             }
         }
