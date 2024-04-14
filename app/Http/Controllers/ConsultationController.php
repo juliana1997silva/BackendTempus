@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+use CogPowered\FineDiff;
 
 use App\Http\CustomHttpClient;
 use App\Http\Requests\ConsultationRequest;
@@ -22,6 +24,11 @@ class ConsultationController extends Controller
 
     public function index()
     {
+
+        // $result = $this->queryRequest("59120","wfelix");
+        
+
+        // return response()->json($result,  200);
         try {
 
             $consults = Consultations::all();
@@ -31,6 +38,20 @@ class ConsultationController extends Controller
         } catch (\Exception $e) {
             return response()->json(["error" => $e], 500);
         }
+    }
+
+    public function showCVS($consulta)
+    {
+        // try {
+
+            $data = $this->showRequestCVS($consulta);
+
+            // dd($data);
+            return response()->json($data,  200);
+
+        // } catch (\Exception $e) {
+        //     return response()->json(["error" => $e], 500);
+        // }
     }
 
     public function show($consulta,$user)
@@ -107,7 +128,7 @@ class ConsultationController extends Controller
 
     public function update()
     {
-        try {
+        // try {
 
             $consults = Consultations::all();
             if ( $consults == NULL ) {
@@ -144,9 +165,9 @@ class ConsultationController extends Controller
                 return response()->json(ConsultationResource::collection($consults),  200);
 
                            
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e], 500);
-        }
+        // } catch (\Exception $e) {
+        //     return response()->json(["error" => $e], 500);
+        // }
     }
 
     public function destroy($id)
@@ -158,16 +179,19 @@ class ConsultationController extends Controller
 
     public function queryRequest($consulta,$user)  {
     
-        $resultado = $this->client->post('/get_data.php',
-            [
-                "query" => "task",
-                "action" => "extra",
-                "request_key" => "$consulta",
-                "_" => "1710176337413"
-            ]
-        );
+        $request_data =  [
+            "query" => "task",
+            "action" => "extra",
+            "request_key" => "$consulta",
+            "_" => "1712496348515"
+        ];
+
+        $resultado = $this->client->post('/get_data.php', $request_data);
     
-        // return response()->json($resultado,  200);s
+
+        // return $resultado;
+        // dd($resultado);
+        // return response()->json($resultado,  200);
         $data = [];
 
 
@@ -204,6 +228,7 @@ class ConsultationController extends Controller
                                 if ( !isset($data['event']['status']['qty']) ) {
                                     $data['event']['status']['qty'] = 1;
                                     $data['event']['status']['start'] = $event['insertion'];
+                                    $data['event']['status']['history'][$key]['message'] = $event['type'];
                                     $data['event']['status']['history'][$key]['message'] = $event['message'];
                                     $data['event']['status']['history'][$key]['date'] = $event['insertion'];
                                 }
@@ -212,12 +237,14 @@ class ConsultationController extends Controller
                                 }
                                 if ( !isset($data['event']['status']['last']) ) {
                                     $data['event']['status']['last'] = $event['insertion'];
+                                    $data['event']['status']['history'][$key]['message'] = $event['type'];
                                     $data['event']['status']['history'][$key]['message'] = $event['message'];
                                     $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
                                     $data['event']['status']['history'][$key]['user'] = $event['user_id'];
                                 }
                                 else{
                                     $data['event']['status']['last'] = $event['insertion'];
+                                    $data['event']['status']['history'][$key]['message'] = $event['type'];
                                     $data['event']['status']['history'][$key]['message'] = $event['message'];
                                     $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
                                     $data['event']['status']['history'][$key]['user'] = $event['user_id'];
@@ -249,6 +276,7 @@ class ConsultationController extends Controller
                             }
 
                             if ( strstr($event['message'],"Início previsto de") || strstr($event['message'],"Fim previsto de") ) {
+                                $data['event']['status']['history'][$key]['message'] = $event['type'];
                                 $data['event']['status']['history'][$key]['message'] = $event['message'];
                                 $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
                                 $data['event']['status']['history'][$key]['user'] = $event['user_id'];
@@ -272,13 +300,14 @@ class ConsultationController extends Controller
                             }
                             break;
                         default:
+                        $data['event']['status']['history'][$key]['message'] = $event['type'];
                             // $data['event']['status']['history'][$key]['message'] = $event['message'];
                             // $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
                             // $data['event']['status']['history'][$key]['user'] = $event['user_id'];
                             break;
                     }
                 }
-            }
+           }
         }
 
         $resultado = $this->client->post('/get_data.php',
@@ -290,8 +319,12 @@ class ConsultationController extends Controller
                 "_" => "1710176337413"
             ]
         );
-
+        
         $data['cvs']['qty'] = 0;
+
+        if ( !isset($resultado['data']) ) {
+            return NULL;
+        }
 
         foreach ($resultado['data'] as $key => $cvs_item) {
             if ( !isset($data['cvs']['qty']) ) {
@@ -398,7 +431,7 @@ class ConsultationController extends Controller
                     if ( is_array($value) && isset($value['status']) )  {
                         if ( isset($value['status']['history']) )  {
                             $history_list = $value['status']['history'];
-                            foreach ($history_list as $history_item) {
+                            foreach ($history_list as $key => $history_item) {
                                 $history_item['message'] = str_replace(["\"","'"],"",$history_item['message']);
         
                                 if ( strstr($history_item['message'],"para Desenvolvimento") ) {
@@ -541,28 +574,29 @@ class ConsultationController extends Controller
                                 if ( !isset($data['event']['category']['qty']) ) {
                                     $data['event']['category']['qty'] = 1;
                                     $data['event']['category']['start'] = $event['insertion'];
-                                    $data['event']['category']['history'][$idx]['message'] = $event['message'];
+                                    $data['event']['category']['history'][$idx]['message'] =  $event['message'];
                                     $data['event']['category']['history'][$idx]['datetime'] = $event['insertion'];
+                                    $data['event']['category']['history'][$idx]['user'] = $event['user_id'];
                                 }
                                 else {
                                     $data['event']['category']['qty']++;
                                 }
                                 if ( !isset($data['event']['category']['last']) ) {
                                     $data['event']['category']['last'] = $event['insertion'];
-                                    $data['event']['category']['history'][$idx]['message'] = $event['message'];
+                                    $data['event']['category']['history'][$idx]['message'] =  "(".$event['type'].") ".$event['message'];
                                     $data['event']['category']['history'][$idx]['datetime'] = $event['insertion'];
                                     $data['event']['category']['history'][$idx]['user'] = $event['user_id'];
                                 }
                                 else{
                                     $data['event']['category']['last'] = $event['insertion'];
-                                    $data['event']['category']['history'][$idx]['message'] = $event['message'];
+                                    $data['event']['category']['history'][$idx]['message'] =  "(".$event['type'].") ".$event['message'];
                                     $data['event']['category']['history'][$idx]['datetime'] = $event['insertion'];
                                     $data['event']['category']['history'][$idx]['user'] = $event['user_id'];
                                 }
                             }
 
                             if ( strstr($event['message'],"Início previsto de") || strstr($event['message'],"Fim previsto de") ) {
-                                $data['event']['status']['history'][$idx]['message'] = $event['message'];
+                                $data['event']['status']['history'][$idx]['message'] = "(".$event['type'].") ".$event['message'];
                                 $data['event']['status']['history'][$idx]['datetime'] = $event['insertion'];
                                 $data['event']['status']['history'][$idx]['user'] = $event['user_id'];
                             }
@@ -586,13 +620,27 @@ class ConsultationController extends Controller
                             }
                             break;
                         default:
+                        $data['event']['status']['history'][$key]['message'] = $event['type'];
                             // $data['event']['status']['history'][$key]['message'] = $event['message'];
                             // $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
                             // $data['event']['status']['history'][$key]['user'] = $event['user_id'];
                             break;
                     }
-
-                    
+                }
+                
+                switch ($event['user_id']) {
+                    case $user:
+                        $data['event']['status']['history'][$key]['type'] = $event['type'];
+                        $data['event']['status']['history'][$key]['message'] = $event['message'];
+                        $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
+                        $data['event']['status']['history'][$key]['user'] = $event['user_id'];
+                        break;
+                    default:
+                        $data['event']['status']['history'][$key]['type'] = $event['type'];
+                        $data['event']['status']['history'][$key]['message'] = $event['message'];
+                        $data['event']['status']['history'][$key]['datetime'] = $event['insertion'];
+                        $data['event']['status']['history'][$key]['user'] = $event['user_id'];
+                        break;    
                 }
             }
         }
@@ -638,7 +686,7 @@ class ConsultationController extends Controller
         );
 
         $situation_after = isset($resultado['data'][0]['status_description'])  ? $resultado['data'][0]['status_description'] : "";
-
+        $situation_after = str_replace("<br>","\n",$situation_after);
         $data['description'] = $resultado['data'][0]['description'];
         $data['status'] = $resultado['data'][0]['status'];
         $data['status_description'] = $situation_after;
@@ -702,5 +750,161 @@ class ConsultationController extends Controller
 
         return $data;
     
-    }        
+    }
+    
+    public function showRequestCVS($consulta)  {
+    
+        $data = [];
+        $resultado = $this->client->post('/get_data.php',
+            [
+                "query" => "cvs",
+                "action" => "list",
+                "request_key" => "$consulta",
+                "dates" => "no",
+                "_" => "1710176337413"
+            ]
+        );
+
+        $dir_base_cvs = env('DIR_BASE_CVS');
+
+        \Log::info('DIR_BASE_CVS: '.$dir_base_cvs);
+        foreach ($resultado['data'] as $key => $item) {
+            // if ( $item['file'] != "store_param_db.php" ) continue;
+            $line = mb_convert_encoding($item, 'UTF-8', 'ISO-8859-1');
+            
+            $dir = $dir_base_cvs."/".$item['system_id'];
+            \Log::info('dir: '.$dir);
+            if ( $item['system_id'] == "venditor" )
+                $cmd = "find $dir -type f -name '".$item['file']."'";
+            else
+                $cmd = "find $dir -type f -name '".$item['file']."' | grep --color '".$item['program']."'";
+            \Log::info('CMD: '.$cmd);
+            $file = shell_exec($cmd);
+            if ( $file != NULL ) {                
+
+                $cmd = "dirname $file";
+                $file_dir = shell_exec($cmd);
+        
+                $cmd = "basename $file";
+                $file_name = shell_exec($cmd);
+        
+                $version = $this->getVersion($item['version']);                
+
+                \Log::info("file_dir $file_dir");
+
+                chdir(trim($file_dir));
+
+                $cmd = "cvs diff -kv -c -r ".$version['before']." -r ".$version['now']." $file_name";
+                \Log::info("CVS: $cmd");
+                $rsl = shell_exec($cmd);
+                $rsl = mb_convert_encoding($rsl, 'UTF-8', 'ISO-8859-1');
+
+                \Log::info("rsl $rsl");
+                $file_data = explode("\n",$rsl);
+
+                $dir_and_file_name = str_replace($dir_base_cvs,"",$file); 
+                // dd($file_data);
+                $result = $this->getDiffCode($file_data,$dir_and_file_name);
+                $data['cvs']['program'][$key] = $result;
+                                
+            }
+
+        }
+
+
+        return $data;
+    
+    }  
+
+    public function getVersion($version_full) {
+        $versao_before = $version_full;
+        $ver_arr = explode(".",$version_full);
+        if ( isset($ver_arr[1]) ) {
+            $version_dec = (int)$ver_arr[1];
+            
+            if ( $version_dec > 1 ) {
+                $versao_before = $ver_arr[0].".".$version_dec - 1;
+            }
+        }
+        return [
+            'before' => $versao_before,
+            'now' => $version_full
+        ];
+    }
+
+    public function getDiffCode( $data, $file_name ) {
+        
+        $copy = false;
+        $copy_before = false;
+        $copy_after = false;
+        $idx = -1;
+
+        $result = [
+            'file' => trim($file_name),
+            'revision' => [
+                'before' => NULL,
+                'after' => NULL
+            ],
+            'changes' => []
+        ];
+
+        foreach ( $data as $key => $line ) {
+            if ( $key == 0 ) {
+                $file = trim(str_replace("Index: ","",$line));
+            }
+    
+            if ( substr($line,0,4 + strlen($file)) == "*** ".$file ) {
+                $result['revision']['before'] = trim(str_replace("*** ".$file,"",$line));
+            }
+    
+            if ( substr($line,0,4 + strlen($file)) == "--- ".$file ) {
+                $result['revision']['after'] = trim(str_replace("--- ".$file,"",$line));
+            }
+    
+            if ( substr($line,0,strlen("***************")) == "***************"  ) {
+                $copy = true;
+                $idx++;
+                continue;
+            }
+    
+            if  ( $copy ) {
+                if ( substr($line,0,strlen("*** ")) == "*** "  ) {
+                    $copy_before = true;
+                    $copy_after = false;
+                    if ( !isset($result['changes'][$idx]))
+                        $result['changes'][$idx]['before']['line'] = trim($line);
+                    else
+                        $result['changes'][$idx]['before']['line'] .= trim($line);
+                    continue;
+                }
+    
+                if ( substr($line,0,strlen("--- ")) == "--- "  ) {
+                    $copy_before = false;
+                    $copy_after = true;
+                    if ( !isset($result['changes'][$idx]))
+                        $result['changes'][$idx]['after']['line'] .= trim($line);
+                    else
+                        $result['changes'][$idx]['after']['line'] = trim($line);
+                    continue;
+                }
+    
+                if ( $copy_before ) {
+                    if ( !isset($result['changes'][$idx]['before']['text']))
+                        $result['changes'][$idx]['before']['text'] = $line;
+                    else
+                        $result['changes'][$idx]['before']['text'] .= $line;
+                }
+    
+                if ( $copy_after ) {
+                    if ( !isset($result['changes'][$idx]['after']['text']))
+                        $result['changes'][$idx]['after']['text'] = $line;
+                    else
+                        $result['changes'][$idx]['after']['text'] .= $line;
+                }
+            }
+    
+        }
+    
+        return $result;
+    }
 }

@@ -19,10 +19,13 @@ class ConsultationResource extends JsonResource
     {
         $user = Users::where('user_interpres_code',$this->user_id)->first();
         $group = Groups::where('name','Desenvolvimento')->first();
-        $group_selected = UsersGroups::where('user_id',$user->id)->where('group_id','!=',$group->id)->first();
-        if ($group_selected != NULL) 
-            $group_user = Groups::where('id',$group_selected->group_id)->first();
-
+        $group_user = NULL;
+        if ( $user != NULL ) {
+            $group_selected = UsersGroups::where('user_id',$user->id)->where('group_id','!=',$group->id)->first();
+            if ($group_selected != NULL) 
+                $group_user = Groups::where('id',$group_selected->group_id)->first();
+        }
+        
         $situation_list = [
             "1" => " Indefinida",
             "74" => "Acompanhamento",
@@ -62,6 +65,7 @@ class ConsultationResource extends JsonResource
             "user" => ($user != NULL) ? $user->name : 'NA',
             "user_interpres_code" => ($user != NULL) ? $user->user_interpres_code : 'NA',
             "team_id" => ($group_user != NULL) ? $group_user->name : 'NA',
+            "customer_name" => "Conecto",
             "situation" => isset($situation_list[$this->status]) ? $situation_list[$this->status] : 'NA',
             "documentation" => $this->documentation,
             "revision" => $this->revision,
