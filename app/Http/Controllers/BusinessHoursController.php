@@ -186,9 +186,9 @@ class BusinessHoursController extends Controller
                     $this->repositoryConsultation->create([
                         'id'                => Tempus::uuid(),
                         'registry_id'       => $time->id,
-                        'queries'           => $value['queries'],
+                        'request_key'           => $value['request_key'],
                         'description'       => $value['description'],
-                        'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
+                        'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['request_key']
                     ]);
                 }
             }
@@ -330,19 +330,19 @@ class BusinessHoursController extends Controller
                 foreach ($result->consults as $value) {
 
                     if ($value['id'] !== null) {
-                        $this->repositoryConsultation->find($value['id'])->update([
-                            'queries'           => $value['queries'],
+                        $this->repositoryConsultation->find($value['request_key'])->update([
+                            'request_key'           => $value['request_key'],
                             'description'       => $value['description'],
-                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
+                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['request_key']
                         ]);
                     } else {
                         //dd("sem ID");
                         $this->repositoryConsultation->create([
                             'id'                => Tempus::uuid(),
                             'registry_id'       => $id,
-                            'queries'           => $value['queries'],
+                            'request_key'           => $value['request_key'],
                             'description'       => $value['description'],
-                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['queries']
+                            'link'              => "https://interpres.conecto.com.br/task.php?task_key=" . $value['request_key']
                         ]);
                     }
                 }

@@ -10,14 +10,11 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CoordinatorsController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\UserGroupsController;
+use App\Http\Controllers\DashboardController;
 use Fruitcake\Cors\HandleCors;
 
 
-Route::get('/consults', [ConsultationController::class, 'index']);
-Route::get('/consult/{id}/{user}', [ConsultationController::class, 'show']);
-Route::put('/consults', [ConsultationController::class, 'update']);
-Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
-
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 Route::group(['middleware' => ['cors']], function () {
 
@@ -64,8 +61,13 @@ Route::group(['middleware' => ['cors']], function () {
         Route::delete('/checkpoint/{id}', [BusinessHoursController::class, 'destroy']);
 
         //consulta
+        Route::get('/consults', [ConsultationController::class, 'index']);
+        Route::get('/consult/{id}/cvs', [ConsultationController::class, 'showCVS']);
+        Route::get('/consult/{id}/user/{user}', [ConsultationController::class, 'show']);
+        Route::put('/consults', [ConsultationController::class, 'update']);
+        Route::post('/consult/{id}/{user}', [ConsultationController::class, 'store']);
         Route::delete('/consult/{id}', [ConsultationController::class, 'destroy']);
-
+        
         //eventos da agenda
         Route::post('/events', [EventsController::class, 'create']);
         Route::get('/events', [EventsController::class, 'index']);
