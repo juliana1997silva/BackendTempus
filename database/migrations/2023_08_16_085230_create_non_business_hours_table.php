@@ -21,6 +21,7 @@ class CreateNonBusinessHoursTable extends Migration
             $table->string('lunch_entry_time')->nullable()->default(NULL);
             $table->string('lunch_out_time')->nullable()->default(NULL);
             $table->string('out_time');
+            $table->string('observation');
             $table->string('total_time');
             $table->timestamps();
         });

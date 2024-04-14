@@ -17,4 +17,9 @@ class Groups extends Model
             'name',
             'status'
     ];
+
+    public function group()
+    {
+        return $this->hasOne(GroupPermissionsProxy::modelClass(), 'group_id');
+    }
 }

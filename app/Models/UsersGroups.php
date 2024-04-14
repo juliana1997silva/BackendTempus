@@ -24,4 +24,9 @@ class UsersGroups extends Model implements UsersGroupsContracts
     {
         return $this->hasOne(UsersProxy::modelClass(), 'id','user_id');
     }
+
+    public function groupPermissions()
+    {
+        return $this->hasOne(UsersGroupsProxy::modelClass(), 'id', 'group_id');
+    }
 }

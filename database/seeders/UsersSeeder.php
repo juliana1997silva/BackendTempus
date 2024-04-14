@@ -124,8 +124,8 @@ class UsersSeeder extends Seeder
             ],
         ];
 
-        foreach($users as $items){
-            if($items['admin'] === 1){
+        foreach ($users as $items) {
+            if ($items['admin'] === 1) {
                 $user = Users::create([
                     'id'                => Tempus::uuid(),
                     'name'              => $items['name'],
@@ -149,7 +149,7 @@ class UsersSeeder extends Seeder
                     'user_id'           => $user->id,
                     'group_id'          => $groupAdmin->id,
                 ]);
-            }else {
+            } else {
                 $user = Users::create([
                     'id'                => Tempus::uuid(),
                     'name'              => $items['name'],
@@ -173,9 +173,13 @@ class UsersSeeder extends Seeder
                     'user_id'           => $user->id,
                     'group_id'          => $groupAdmin->id,
                 ]);
+
+                UsersGroups::create([
+                    'id'                => Tempus::uuid(),
+                    'user_id'           => $user->id,
+                    'group_id'          => $groupWilson->id,
+                ]);
             }
         }
-
-        
     }
 }
